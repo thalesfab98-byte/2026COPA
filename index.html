@@ -1,859 +1,199 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Copa 2026 - Meu Album</title>
-<style>
-:root{--bg:#070B14;--bg2:#0D1526;--bg3:#131D35;--gold:#FFD700;--gold2:#FFA500;--green:#00E676;--red:#FF5252;--blue:#4FC3F7;--text:#E8EAF6;--text2:#8896B3;--card:#111827;--border:rgba(255,215,0,0.15);--radius:14px;--shadow:0 4px 24px rgba(0,0,0,.5);--transition:all .25s cubic-bezier(.4,0,.2,1)}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif}
-#app{display:flex;flex-direction:column;height:100%}
-#header{background:linear-gradient(135deg,#0a1628,#0f1f40 50%,#0a1628);border-bottom:1px solid var(--border);padding:12px 16px 10px;flex-shrink:0;position:relative;overflow:hidden}
-#header::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:radial-gradient(circle,rgba(255,215,0,.15),transparent 70%);border-radius:50%;pointer-events:none}
-.header-top{display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:8px}
-.logo-icon{font-size:28px;filter:drop-shadow(0 0 8px rgba(255,215,0,.6))}
-.logo-title{font-size:18px;font-weight:900;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.logo-sub{font-size:10px;color:var(--text2);font-weight:500;letter-spacing:2px;text-transform:uppercase}
-.header-stats{display:flex;gap:12px}
-.hstat{text-align:center}
-.hstat-val{font-size:20px;font-weight:900;color:var(--gold);line-height:1}
-.hstat-lbl{font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
-.progress-bar-wrap{margin-top:10px}
-.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:4px}
-.progress-bar{height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
-.progress-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#FFD700,#00E676);transition:width .8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 8px rgba(255,215,0,.4)}
-#main{flex:1;overflow:hidden;position:relative}
-.view{position:absolute;inset:0;overflow-y:auto;padding:12px;display:none;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-.view.active{display:block}
-#nav{background:rgba(7,11,20,.95);backdrop-filter:blur(12px);border-top:1px solid var(--border);display:flex;align-items:stretch;flex-shrink:0}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 8px;border:none;background:none;cursor:pointer;color:var(--text2);transition:var(--transition);gap:3px;position:relative}
-.nav-btn.active{color:var(--gold)}
-.nav-btn.active::after{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:0 0 4px 4px}
-.nav-icon{font-size:22px;transition:var(--transition)}
-.nav-btn.active .nav-icon{filter:drop-shadow(0 0 6px rgba(255,215,0,.7));transform:scale(1.1)}
-.nav-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.nav-badge{position:absolute;top:6px;right:calc(50% - 18px);background:var(--red);color:#fff;font-size:9px;font-weight:700;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg)}
-.search-bar{display:flex;gap:8px;margin-bottom:12px;align-items:center}
-.search-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;transition:var(--transition)}
-.search-input:focus{border-color:rgba(255,215,0,.5);box-shadow:0 0 0 3px rgba(255,215,0,.1)}
-.filter-btn{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text2);cursor:pointer;font-size:16px;transition:var(--transition)}
-.filter-btn.active{color:var(--gold);border-color:rgba(255,215,0,.4)}
-.group-section{margin-bottom:20px}
-.group-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:8px 12px;background:var(--bg2);border-radius:10px;border-left:3px solid var(--gold);cursor:pointer;transition:var(--transition)}
-.group-title{font-weight:700;font-size:14px;flex:1}
-.group-progress{font-size:12px;color:var(--text2)}
-.group-toggle{color:var(--text2);font-size:12px}
-.group-body{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.group-body.collapsed{display:none}
-.team-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:var(--transition)}
-.team-card:hover{border-color:rgba(255,215,0,.4);transform:translateY(-1px)}
-.team-header{padding:10px 12px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);position:relative}
-.team-flag{font-size:24px}
-.team-info{flex:1;min-width:0}
-.team-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.team-count{font-size:11px;color:var(--text2)}
-.team-mini-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(255,255,255,.06)}
-.team-mini-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:0 99px 99px 0;transition:width .6s ease}
-.stickers-grid{padding:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.sticker-chip{aspect-ratio:3/4;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;transition:var(--transition);position:relative;overflow:hidden;border:1.5px solid transparent;font-size:9px;font-weight:600;text-align:center;padding:3px}
-.sticker-chip.missing{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.08);color:rgba(255,255,255,.25)}
-.sticker-chip.have{background:linear-gradient(135deg,rgba(0,230,118,.15),rgba(0,230,118,.05));border-color:rgba(0,230,118,.4);color:var(--green)}
-.sticker-chip.duplicate{background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,165,0,.1));border-color:rgba(255,215,0,.6);color:var(--gold)}
-.sticker-chip.badge-type{background:linear-gradient(135deg,rgba(79,195,247,.15),rgba(79,195,247,.05));border-color:rgba(79,195,247,.3);color:var(--blue)}
-.sticker-num{font-size:8px;opacity:.6;line-height:1}
-.sticker-pos{font-size:7px;opacity:.5}
-.sticker-icon{font-size:14px;line-height:1}
-.dup-badge{position:absolute;top:2px;right:2px;background:var(--gold);color:#000;font-size:7px;font-weight:900;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-.check-mark{position:absolute;top:2px;left:2px;font-size:9px;color:var(--green)}
-.cam-container{display:flex;flex-direction:column;gap:12px}
-.cam-preview-wrap{position:relative;background:#000;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;width:100%;max-height:50vh;border:2px solid var(--border)}
-#cam-video,#cam-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-#cam-canvas{display:none}
-.cam-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(7,11,20,.8));pointer-events:none}
-.cam-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);width:70%;aspect-ratio:3/4;border:2px solid rgba(255,215,0,.6);border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,.35)}
-.cam-corner{position:absolute;width:16px;height:16px}
-.cam-corner.tl{top:-2px;left:-2px;border-top:3px solid var(--gold);border-left:3px solid var(--gold);border-radius:6px 0 0 0}
-.cam-corner.tr{top:-2px;right:-2px;border-top:3px solid var(--gold);border-right:3px solid var(--gold);border-radius:0 6px 0 0}
-.cam-corner.bl{bottom:-2px;left:-2px;border-bottom:3px solid var(--gold);border-left:3px solid var(--gold);border-radius:0 0 0 6px}
-.cam-corner.br{bottom:-2px;right:-2px;border-bottom:3px solid var(--gold);border-right:3px solid var(--gold);border-radius:0 0 6px 0}
-.cam-hint{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-size:11px;color:rgba(255,255,255,.7)}
-.cam-controls{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:12px}
-.cam-btn-main{width:70px;height:70px;border-radius:50%;border:4px solid var(--gold);background:rgba(255,215,0,.15);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:30px;transition:var(--transition);box-shadow:0 0 20px rgba(255,215,0,.3)}
-.cam-btn-main:active{transform:scale(.93);background:rgba(255,215,0,.3)}
-.cam-btn-sec{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--border);background:var(--bg3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:var(--transition)}
-.cam-status{text-align:center;font-size:13px;color:var(--text2);margin-top:8px}
-.photo-review{display:none;flex-direction:column;gap:12px}
-.photo-review.show{display:flex}
-.photo-thumb{width:80px;height:106px;border-radius:8px;object-fit:cover;border:2px solid var(--gold);flex-shrink:0}
-.review-top{display:flex;gap:12px;align-items:flex-start}
-.review-info{flex:1}
-.review-info h3{font-size:15px;font-weight:700;margin-bottom:4px}
-.review-info p{font-size:12px;color:var(--text2);line-height:1.4}
-.search-sticker{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-size:14px;outline:none;width:100%;transition:var(--transition)}
-.search-sticker:focus{border-color:rgba(255,215,0,.5)}
-.search-results{max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
-.search-result-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg3);border-radius:10px;cursor:pointer;border:1.5px solid transparent;transition:var(--transition)}
-.search-result-item:hover,.search-result-item.selected{border-color:var(--gold);background:rgba(255,215,0,.08)}
-.sri-flag{font-size:22px}
-.sri-info{flex:1}
-.sri-name{font-size:13px;font-weight:600}
-.sri-detail{font-size:11px;color:var(--text2)}
-.sri-status{font-size:11px;font-weight:700}
-.sri-status.have{color:var(--green)}
-.sri-status.missing{color:var(--text2)}
-.add-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:700;font-size:15px;border:none;border-radius:12px;padding:14px;width:100%;cursor:pointer;transition:var(--transition);box-shadow:0 4px 16px rgba(255,215,0,.3)}
-.add-btn:active{transform:scale(.98)}
-.add-btn:disabled{opacity:.4;cursor:not-allowed}
-.dup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.dup-title{font-size:18px;font-weight:900}
-.dup-export-btn{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text2);font-size:12px;cursor:pointer;transition:var(--transition)}
-.dup-export-btn:hover{color:var(--gold);border-color:var(--gold)}
-.dup-list{display:flex;flex-direction:column;gap:8px}
-.dup-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--card);border-radius:var(--radius);border:1px solid var(--border)}
-.dup-flag{font-size:24px}
-.dup-info{flex:1}
-.dup-name{font-size:13px;font-weight:600}
-.dup-team{font-size:11px;color:var(--text2)}
-.dup-count-ctrl{display:flex;align-items:center;gap:8px}
-.dup-minus,.dup-plus{width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--transition)}
-.dup-minus:hover{border-color:var(--red);color:var(--red)}
-.dup-plus:hover{border-color:var(--green);color:var(--green)}
-.dup-count{font-size:16px;font-weight:700;color:var(--gold);min-width:20px;text-align:center}
-.empty-state{text-align:center;padding:40px 20px;color:var(--text2)}
-.empty-icon{font-size:48px;margin-bottom:12px}
-.empty-text{font-size:14px}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.stat-card{background:var(--card);border-radius:var(--radius);padding:14px;border:1px solid var(--border);text-align:center}
-.stat-val{font-size:32px;font-weight:900;line-height:1}
-.stat-val.gold{color:var(--gold)}
-.stat-val.green{color:var(--green)}
-.stat-val.blue{color:var(--blue)}
-.stat-val.red{color:var(--red)}
-.stat-card.wide{grid-column:span 2}
-.section-title{font-size:15px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
-.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
-.team-progress-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.tpl-item{background:var(--card);border-radius:10px;padding:10px 12px;border:1px solid var(--border)}
-.tpl-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.tpl-flag{font-size:18px}
-.tpl-name{font-size:13px;font-weight:600;flex:1}
-.tpl-pct{font-size:12px;font-weight:700;color:var(--gold)}
-.tpl-bar{height:4px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
-.tpl-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green));border-radius:99px;transition:width .6s ease}
-.recent-list{display:flex;flex-direction:column;gap:6px}
-.recent-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border-radius:10px;border:1px solid var(--border)}
-.recent-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
-.recent-info{flex:1}
-.recent-name{font-size:13px;font-weight:600}
-.recent-time{font-size:11px;color:var(--text2)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:100;display:none;align-items:flex-end;justify-content:center}
-.modal-overlay.show{display:flex}
-.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:500px;border-top:1px solid var(--border);animation:slideUp .3s cubic-bezier(.4,0,.2,1);max-height:85vh;overflow-y:auto}
-@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-handle{width:40px;height:4px;background:rgba(255,255,255,.2);border-radius:99px;margin:0 auto 16px}
-.modal-title{font-size:18px;font-weight:800;margin-bottom:4px}
-.modal-sub{font-size:13px;color:var(--text2);margin-bottom:16px}
-.modal-sticker-big{display:flex;flex-direction:column;align-items:center;padding:20px;background:var(--bg3);border-radius:var(--radius);margin-bottom:16px;border:1px solid var(--border);position:relative}
-.modal-sticker-num{font-size:12px;color:var(--text2);margin-bottom:4px}
-.modal-sticker-icon{font-size:48px;margin-bottom:8px}
-.modal-sticker-name{font-size:20px;font-weight:800;text-align:center}
-.modal-sticker-pos{font-size:13px;color:var(--text2);margin-top:4px}
-.modal-status-badge{position:absolute;top:10px;right:10px;padding:4px 10px;border-radius:99px;font-size:11px;font-weight:700}
-.modal-status-badge.have{background:rgba(0,230,118,.2);color:var(--green);border:1px solid rgba(0,230,118,.4)}
-.modal-status-badge.missing{background:rgba(136,150,179,.15);color:var(--text2);border:1px solid rgba(136,150,179,.2)}
-.modal-status-badge.duplicate{background:rgba(255,215,0,.2);color:var(--gold);border:1px solid rgba(255,215,0,.4)}
-.modal-actions{display:flex;flex-direction:column;gap:8px}
-.modal-btn{padding:14px;border-radius:12px;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:var(--transition);width:100%}
-.modal-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;box-shadow:0 4px 16px rgba(255,215,0,.3)}
-.modal-btn.secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
-.modal-btn.danger{background:rgba(255,82,82,.15);color:var(--red);border:1px solid rgba(255,82,82,.3)}
-.modal-btn:active{transform:scale(.98)}
-#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:10px 18px;font-size:13px;font-weight:600;white-space:nowrap;opacity:0;transition:all .3s ease;z-index:200;pointer-events:none;box-shadow:var(--shadow);max-width:calc(100vw - 32px);text-align:center}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#toast.success{border-color:rgba(0,230,118,.5);color:var(--green)}
-#toast.error{border-color:rgba(255,82,82,.5);color:var(--red)}
-#toast.info{border-color:rgba(255,215,0,.5);color:var(--gold)}
-#onboarding{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-.onb-logo{font-size:64px;margin-bottom:8px;filter:drop-shadow(0 0 20px rgba(255,215,0,.5))}
-.onb-title{font-size:28px;font-weight:900;background:linear-gradient(135deg,#FFD700,#FFA500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
-.onb-sub{font-size:14px;color:var(--text2);margin-bottom:32px;max-width:280px;line-height:1.5}
-.onb-features{display:flex;flex-direction:column;gap:12px;width:100%;max-width:320px;margin-bottom:32px}
-.onb-feature{display:flex;align-items:center;gap:12px;background:var(--bg2);border-radius:12px;padding:12px 16px;border:1px solid var(--border);text-align:left}
-.onb-feature-icon{font-size:24px}
-.onb-feature-text{font-size:13px;color:var(--text2);line-height:1.3}
-.onb-feature-text strong{color:var(--text)}
-.onb-start{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:900;font-size:17px;border:none;border-radius:16px;padding:16px 48px;cursor:pointer;transition:var(--transition);box-shadow:0 8px 32px rgba(255,215,0,.35);width:100%;max-width:320px}
-.onb-start:active{transform:scale(.97)}
-.special-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
-.special-chip{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:1.5px solid transparent;transition:var(--transition);font-size:8px;font-weight:600;text-align:center;padding:4px;background:var(--bg2)}
-.special-chip.missing{border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.3)}
-.special-chip.have{border-color:rgba(255,215,0,.5);background:rgba(255,215,0,.1);color:var(--gold)}
-.special-chip.duplicate{border-color:var(--gold);background:rgba(255,215,0,.2);color:var(--gold)}
-.special-chip-icon{font-size:20px}
-.share-options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.share-opt{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;cursor:pointer;transition:var(--transition)}
-.share-opt:hover{border-color:var(--gold)}
-.share-opt-icon{font-size:24px;margin-bottom:4px}
-.share-opt-label{font-size:11px;color:var(--text2);font-weight:600}
-.fade-in{animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,215,0,.6)}70%{box-shadow:0 0 0 14px rgba(255,215,0,0)}100%{box-shadow:0 0 0 0 rgba(255,215,0,0)}}
-.cam-btn-main.ready{animation:pulse 2s infinite}
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-thumb{background:rgba(255,215,0,.2);border-radius:99px}
-@media(min-width:480px){.stickers-grid{grid-template-columns:repeat(4,1fr)}.special-grid{grid-template-columns:repeat(6,1fr)}}
-@media(min-width:768px){.group-body{grid-template-columns:repeat(3,1fr)}.stickers-grid{grid-template-columns:repeat(5,1fr)}}
-</style>
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Copa%202026%20-%20Meu%20Album%22%2C%22short_name%22%3A%22Copa%202026%22%2C%22description%22%3A%22Controle%20de%20figurinhas%20Copa%20do%20Mundo%202026%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23070B14%22%2C%22theme_color%22%3A%22%23FFD700%22%2C%22orientation%22%3A%22portrait-primary%22%7D">
-<meta name="theme-color" content="#FFD700">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Copa 2026">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23070B14'/><text y='.9em' font-size='80'><tspan x='10'>&#x26BD;</tspan></text></svg>">
-</head>
-<body>
-
-<div id="onboarding">
-  <div class="onb-logo">&#x26BD;</div>
-  <div class="onb-title">Copa 2026</div>
-  <div class="onb-sub">Gerencie sua colecao de figurinhas do maior evento do futebol mundial</div>
-  <div class="onb-features">
-    <div class="onb-feature"><div class="onb-feature-icon">&#x1F4F7;</div><div class="onb-feature-text"><strong>Camera integrada</strong><br>Fotografe e identifique suas figurinhas</div></div>
-    <div class="onb-feature"><div class="onb-feature-icon">&#x1F4CA;</div><div class="onb-feature-text"><strong>Controle completo</strong><br>Acompanhe o progresso por selecao</div></div>
-    <div class="onb-feature"><div class="onb-feature-icon">&#x1F501;</div><div class="onb-feature-text"><strong>Repetidas</strong><br>Gerencie suas figurinhas duplicadas</div></div>
-  </div>
-  <button class="onb-start" onclick="closeOnboarding()">Comecar minha colecao &#x26BD;</button>
-</div>
-
-<div id="app">
-  <div id="header">
-    <div class="header-top">
-      <div class="logo">
-        <div class="logo-icon">&#x26BD;</div>
-        <div>
-          <div class="logo-title">Copa 2026</div>
-          <div class="logo-sub">Meu Album</div>
-        </div>
-      </div>
-      <div class="header-stats">
-        <div class="hstat"><div class="hstat-val" id="h-total">0</div><div class="hstat-lbl">Tenho</div></div>
-        <div class="hstat"><div class="hstat-val" id="h-missing">—</div><div class="hstat-lbl">Faltam</div></div>
-        <div class="hstat"><div class="hstat-val" id="h-dup">0</div><div class="hstat-lbl">Repet.</div></div>
-        <button onclick="openSettings()" style="background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:8px;cursor:pointer;font-size:16px;padding:6px 10px;color:#FFD700;position:relative;z-index:99;-webkit-tap-highlight-color:rgba(255,215,0,.3);touch-action:manipulation" title="IA">⚙️</button>
-      </div>
-    </div>
-    <div class="progress-bar-wrap">
-      <div class="progress-label"><span>Progresso do Album</span><span id="h-pct">0%</span></div>
-      <div class="progress-bar"><div class="progress-fill" id="h-bar" style="width:0%"></div></div>
-    </div>
-  </div>
-
-  <div id="main">
-    <div class="view active" id="view-album">
-      <div class="search-bar">
-        <input class="search-input" placeholder="Buscar figurinha ou jogador..." id="album-search" oninput="filterAlbum()">
-        <button class="filter-btn" id="filter-missing-btn" onclick="toggleFilterMissing()" title="Mostrar so as que faltam">&#x1F518;</button>
-      </div>
-      <div id="album-content"></div>
-    </div>
-
-    <div class="view" id="view-camera">
-      <div class="cam-container">
-        <div id="cam-live" class="fade-in">
-          <div class="cam-preview-wrap">
-            <video id="cam-video" autoplay muted playsinline></video>
-            <canvas id="cam-canvas"></canvas>
-            <div class="cam-overlay"></div>
-            <div class="cam-frame">
-              <div class="cam-corner tl"></div><div class="cam-corner tr"></div>
-              <div class="cam-corner bl"></div><div class="cam-corner br"></div>
-            </div>
-            <div class="cam-hint">Posicione a figurinha no quadro</div>
-          </div>
-          <div class="cam-controls">
-            <button class="cam-btn-sec" onclick="switchCamera()" title="Trocar camera">&#x1F504;</button>
-            <button class="cam-btn-main ready" id="capture-btn" onclick="capturePhoto()">&#x1F4F8;</button>
-            <button class="cam-btn-sec" onclick="showManualAdd()" title="Adicionar manualmente">&#x270F;&#xFE0F;</button>
-          </div>
-          <div class="cam-status" id="cam-status">Camera pronta</div>
-        </div>
-
-        <!-- AI Result Panel -->
-        <div id="ai-result-panel" style="display:none" class="fade-in">
-          <div id="ai-loading" style="display:none;text-align:center;padding:20px;gap:10px;flex-direction:column;align-items:center">
-            <div style="position:relative;width:60px;height:60px;margin:0 auto">
-              <div style="position:absolute;inset:0;border-radius:50%;border:3px solid rgba(255,215,0,.2);border-top-color:var(--gold);animation:spin .8s linear infinite"></div>
-              <div style="position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(0,230,118,.2);border-top-color:var(--green);animation:spin 1.2s linear infinite reverse"></div>
-              <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:20px">🤖</div>
-            </div>
-            <div style="font-size:14px;font-weight:700;color:var(--gold)">Reconhecendo jogador...</div>
-            <div style="font-size:11px;color:var(--text2)" id="ai-loading-msg">Analisando a figurinha com IA</div>
-          </div>
-          <div id="ai-match-result" style="display:none">
-            <div id="ai-match-card" style="background:linear-gradient(135deg,rgba(0,230,118,.1),rgba(0,230,118,.03));border:1.5px solid rgba(0,230,118,.4);border-radius:14px;padding:16px;margin-bottom:12px">
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
-                <div style="font-size:40px" id="ai-match-flag">🌍</div>
-                <div style="flex:1">
-                  <div style="font-size:11px;color:var(--green);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">🤖 Identificado pela IA</div>
-                  <div style="font-size:19px;font-weight:900" id="ai-match-name">—</div>
-                  <div style="font-size:12px;color:var(--text2);margin-top:2px" id="ai-match-detail">—</div>
-                </div>
-                <div id="ai-confidence-badge" style="text-align:center;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);border-radius:8px;padding:6px 8px">
-                  <div style="font-size:16px;font-weight:900;color:var(--gold)" id="ai-conf-pct">—</div>
-                  <div style="font-size:9px;color:var(--text2)">confiança</div>
-                </div>
-              </div>
-              <div id="ai-other-candidates" style="display:none">
-                <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:600">OUTRAS OPÇÕES:</div>
-                <div id="ai-candidates-list" style="display:flex;flex-direction:column;gap:4px"></div>
-              </div>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button id="ai-confirm-btn" class="add-btn" onclick="confirmAIMatch()" style="flex:2">✅ Confirmar e Adicionar</button>
-              <button onclick="showManualSearchFromAI()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer">🔍 Corrigir</button>
-            </div>
-            <button onclick="retakePhoto()" style="width:100%;margin-top:8px;background:none;border:1px solid var(--border);border-radius:12px;padding:10px;color:var(--text2);font-size:13px;cursor:pointer">📷 Tirar outra foto</button>
-          </div>
-          <div id="ai-no-key" style="display:none;text-align:center;padding:20px;background:rgba(255,215,0,.05);border-radius:14px;border:1px solid rgba(255,215,0,.2)">
-            <div style="font-size:36px;margin-bottom:8px">🤖</div>
-            <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px">Reconhecimento com IA</div>
-            <div style="font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.5">Configure sua chave Gemini para identificar jogadores automaticamente pela foto</div>
-            <button onclick="openSettings()" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:10px;padding:12px 24px;font-weight:700;font-size:13px;cursor:pointer">⚙️ Configurar Chave de IA</button>
-          </div>
-        </div>
-        <div class="photo-review" id="photo-review">
-          <div class="review-top">
-            <img class="photo-thumb" id="photo-thumb" src="" alt="Figurinha">
-            <div class="review-info">
-              <h3>Foto capturada! &#x2705;</h3>
-              <p>Busque pelo numero ou nome do jogador para identificar a figurinha</p>
-            </div>
-          </div>
-          <input class="search-sticker" id="sticker-search" placeholder="Numero ou nome do jogador..." oninput="searchSticker(this.value)">
-          <div class="search-results" id="search-results"></div>
-          <div style="display:flex;gap:8px;margin-top:4px">
-            <button class="add-btn" id="confirm-add-btn" onclick="confirmAdd()" disabled style="flex:2">Marcar como coletada</button>
-            <button class="modal-btn secondary" onclick="retakePhoto()" style="flex:1;padding:14px">&#x1F504; Refazer</button>
-          </div>
-        </div>
-        <div id="manual-add-panel" style="display:none" class="fade-in">
-          <h3 style="margin-bottom:10px;font-size:15px">Adicionar Manualmente</h3>
-          <input class="search-sticker" id="manual-search" placeholder="Buscar por numero ou jogador..." oninput="searchSticker(this.value,'manual-results')" style="margin-bottom:8px">
-          <div class="search-results" id="manual-results"></div>
-          <button class="add-btn" id="manual-add-btn" onclick="confirmAdd()" disabled style="margin-top:8px">Marcar como coletada</button>
-          <button class="modal-btn secondary" onclick="hideManualAdd()" style="margin-top:8px">Cancelar</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="view-duplicates">
-      <div class="dup-header">
-        <div class="dup-title">&#x1F501; Repetidas</div>
-        <button class="dup-export-btn" onclick="showShareModal()">&#x1F4E4; Exportar</button>
-      </div>
-      <div id="dup-summary" style="margin-bottom:12px;font-size:13px;color:var(--text2)"></div>
-      <div class="dup-list" id="dup-list"></div>
-    </div>
-
-    <div class="view" id="view-stats">
-      <div class="stats-grid" id="stats-cards"></div>
-      <div class="section-title">&#x1F4C8; Por Selecao</div>
-      <div class="team-progress-list" id="team-progress-list"></div>
-      <div class="section-title">&#x1F550; Ultimas Adicionadas</div>
-      <div class="recent-list" id="recent-list"></div>
-    </div>
-  </div>
-
-  <nav id="nav">
-    <button class="nav-btn active" onclick="switchView('album',this)">
-      <div class="nav-icon">&#x1F4D6;</div><div class="nav-label">Album</div>
-    </button>
-    <button class="nav-btn" onclick="switchView('camera',this)">
-      <div class="nav-icon">&#x1F4F7;</div><div class="nav-label">Camera</div>
-    </button>
-    <button class="nav-btn" onclick="switchView('duplicates',this)">
-      <div class="nav-icon">&#x1F501;</div><div class="nav-label">Repetidas</div>
-      <div class="nav-badge" id="dup-badge" style="display:none">0</div>
-    </button>
-    <button class="nav-btn" onclick="switchView('stats',this)">
-      <div class="nav-icon">&#x1F4CA;</div><div class="nav-label">Stats</div>
-    </button>
-  </nav>
-</div>
-
-<div class="modal-overlay" id="sticker-modal" onclick="closeStickerModal(event)">
-  <div class="modal-sheet" id="sticker-modal-sheet">
-    <div class="modal-handle"></div>
-    <div id="modal-sticker-big" class="modal-sticker-big"></div>
-    <div id="modal-actions" class="modal-actions"></div>
-  </div>
-</div>
-
-<div class="modal-overlay" id="share-modal" onclick="closeShareModal(event)">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">Compartilhar Repetidas</div>
-    <div class="modal-sub">Escolha como exportar sua lista de figurinhas repetidas</div>
-    <div class="share-options">
-      <div class="share-opt" onclick="exportText()"><div class="share-opt-icon">&#x1F4DD;</div><div class="share-opt-label">Texto</div></div>
-      <div class="share-opt" onclick="exportCSV()"><div class="share-opt-icon">&#x1F4CA;</div><div class="share-opt-label">CSV</div></div>
-      <div class="share-opt" onclick="shareWhatsApp()"><div class="share-opt-icon">&#x1F4AC;</div><div class="share-opt-label">WhatsApp</div></div>
-      <div class="share-opt" onclick="copyToClipboard()"><div class="share-opt-icon">&#x1F4CB;</div><div class="share-opt-label">Copiar</div></div>
-    </div>
-    <button class="modal-btn secondary" style="margin-top:12px" onclick="closeShareModal()">Fechar</button>
-  </div>
-</div>
-
-
-<!-- Settings Modal -->
-<div class="modal-overlay" id="settings-modal" onclick="closeSettings(event)">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">⚙️ Configurações</div>
-    <div class="modal-sub">Configure o reconhecimento automático por IA</div>
-
-    <div style="background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:20px">🤖</span>
-        <span style="font-size:14px;font-weight:700;color:var(--gold)">Google Gemini Vision</span>
-        <span id="ai-status-dot" style="width:8px;height:8px;border-radius:50%;background:var(--text2);margin-left:auto"></span>
-      </div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:12px;line-height:1.5">
-        Use a API gratuita do Google para identificar jogadores automaticamente ao tirar fotos.
-        <br><br>
-        ✅ <strong style="color:var(--text)">Grátis:</strong> 1.500 fotos/dia • Sem cartão de crédito
-      </div>
-      <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600">CHAVE DE API (GEMINI)</label>
-      <input id="gemini-key-input" type="password"
-        placeholder="Cole sua chave aqui..."
-        style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:monospace;margin-bottom:8px"
-        oninput="checkApiKeyFormat(this.value)">
-      <div id="api-key-hint" style="font-size:11px;color:var(--text2);margin-bottom:10px"></div>
-      <a href="https://aistudio.google.com/app/apikey" target="_blank"
-        style="display:block;text-align:center;font-size:12px;color:var(--blue);margin-bottom:12px;text-decoration:none">
-        🔗 Obter chave gratuita → aistudio.google.com
-      </a>
-      <button onclick="saveApiKey()" class="add-btn" style="font-size:14px;padding:12px">Salvar Chave</button>
-    </div>
-
-    <div style="background:var(--bg2);border-radius:12px;padding:14px;margin-bottom:16px;border:1px solid var(--border)">
-      <div style="font-size:13px;font-weight:700;margin-bottom:10px">📖 Como funciona</div>
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--text2)">
-        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">1.</span> Tire a foto da figurinha</div>
-        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">2.</span> A IA analisa e identifica o jogador automaticamente</div>
-        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">3.</span> Confirme ou corrija se necessário</div>
-        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">4.</span> A figurinha é marcada na coleção</div>
-      </div>
-    </div>
-
-    <button class="modal-btn secondary" onclick="closeSettings()">Fechar</button>
-  </div>
-</div>
-
-<div id="toast"></div>
-
 <script>
-
 const SPECIAL=[
 {id:'SP-01',num:'SP-01',name:'Capa do Album',icon:'📖',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
 {id:'SP-02',num:'SP-02',name:'Mascote Cali',icon:'🦅',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
 {id:'SP-03',num:'SP-03',name:'Estadio LA SoFi',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
 {id:'SP-04',num:'SP-04',name:'Estadio MetLife NY',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
 {id:'SP-05',num:'SP-05',name:'Estadio Dallas',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
-{id:'SP-06',num:'SP-06',name:'Estadio Seattle',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
-{id:'SP-07',num:'SP-07',name:'Estadio Miami',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
-{id:'SP-08',num:'SP-08',name:'Estadio Atlanta',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
-{id:'SP-09',num:'SP-09',name:'Estadio Houston',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
-{id:'SP-10',num:'SP-10',name:'Estadio Boston',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
-{id:'SP-11',num:'SP-11',name:'Estadio Cidade do Mexico',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇲🇽',group:''},
-{id:'SP-12',num:'SP-12',name:'Estadio Monterrey',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇲🇽',group:''},
-{id:'SP-13',num:'SP-13',name:'Estadio Guadalajara',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇲🇽',group:''},
-{id:'SP-14',num:'SP-14',name:'Estadio Toronto',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇨🇦',group:''},
-{id:'SP-15',num:'SP-15',name:'Estadio Vancouver',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇨🇦',group:''},
-{id:'SP-16',num:'SP-16',name:'Trofeu FIFA',icon:'🏆',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'🏆',group:''},
-{id:'SP-17',num:'SP-17',name:'Bola Oficial',icon:'⚽',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
-{id:'SP-18',num:'SP-18',name:'Lendas da Copa',icon:'⭐',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
-{id:'SP-19',num:'SP-19',name:'Melhores Momentos',icon:'🎬',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
-{id:'SP-20',num:'SP-20',name:'Abertura Copa 2026',icon:'🎆',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
+{id:'SP-06',num:'SP-06',name:'Estadio Miami',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
+{id:'SP-07',num:'SP-07',name:'Estadio Atlanta',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
+{id:'SP-08',num:'SP-08',name:'Estadio Houston',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇺🇸',group:''},
+{id:'SP-09',num:'SP-09',name:'Estadio Cidade do Mexico',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇲🇽',group:''},
+{id:'SP-10',num:'SP-10',name:'Estadio Toronto',icon:'🏟️',pos:'ESTADIO',team:'Especiais',teamId:'SPECIAL',flag:'🇨🇦',group:''},
+{id:'SP-11',num:'SP-11',name:'Trofeu FIFA',icon:'🏆',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'🏆',group:''},
+{id:'SP-12',num:'SP-12',name:'Bola Oficial',icon:'⚽',pos:'ESPECIAL',team:'Especiais',teamId:'SPECIAL',flag:'⭐',group:''},
 ];
-
 const TEAMS=[
 {id:'BRA',name:'Brasil',group:'A',flag:'🇧🇷',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Alisson Becker',pos:'GOL',icon:'🧤'},
-{num:3,name:'Ederson',pos:'GOL',icon:'🧤'},
-{num:4,name:'Danilo',pos:'LAT',icon:'⚡'},
-{num:5,name:'Marquinhos',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Gabriel Magalhaes',pos:'ZAG',icon:'🛡️'},
-{num:7,name:'Bremer',pos:'ZAG',icon:'🛡️'},
-{num:8,name:'Wendell',pos:'LAT',icon:'⚡'},
-{num:9,name:'Casemiro',pos:'VOL',icon:'⚙️'},
-{num:10,name:'Lucas Paqueta',pos:'MEI',icon:'🎯'},
-{num:11,name:'Bruno Guimaraes',pos:'VOL',icon:'💪'},
-{num:12,name:'Vinicius Jr',pos:'PNT',icon:'⭐'},
-{num:13,name:'Rodrygo',pos:'PNT',icon:'🌟'},
-{num:14,name:'Raphinha',pos:'PNT',icon:'💨'},
-{num:15,name:'Gabriel Jesus',pos:'ATA',icon:'⚽'},
-{num:16,name:'Gabriel Martinelli',pos:'PNT',icon:'🔥'},
-{num:17,name:'Endrick',pos:'ATA',icon:'💥'},
-{num:18,name:'Pedro',pos:'ATA',icon:'🎯'},
-]},
+{num:2,name:'Alisson Becker',pos:'GOL',icon:'🧤'},{num:3,name:'Ederson',pos:'GOL',icon:'🧤'},
+{num:4,name:'Danilo',pos:'LAT',icon:'⚡'},{num:5,name:'Marquinhos',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'Gabriel Magalhaes',pos:'ZAG',icon:'🛡️'},{num:7,name:'Bremer',pos:'ZAG',icon:'🛡️'},
+{num:8,name:'Wendell',pos:'LAT',icon:'⚡'},{num:9,name:'Casemiro',pos:'VOL',icon:'⚙️'},
+{num:10,name:'Lucas Paqueta',pos:'MEI',icon:'🎯'},{num:11,name:'Bruno Guimaraes',pos:'VOL',icon:'💪'},
+{num:12,name:'Vinicius Jr',pos:'PNT',icon:'⭐'},{num:13,name:'Rodrygo',pos:'PNT',icon:'🌟'},
+{num:14,name:'Raphinha',pos:'PNT',icon:'💨'},{num:15,name:'Gabriel Jesus',pos:'ATA',icon:'⚽'},
+{num:16,name:'Gabriel Martinelli',pos:'PNT',icon:'🔥'},{num:17,name:'Endrick',pos:'ATA',icon:'💥'},
+{num:18,name:'Pedro',pos:'ATA',icon:'🎯'}]},
 {id:'ARG',name:'Argentina',group:'A',flag:'🇦🇷',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Emiliano Martinez',pos:'GOL',icon:'🧤'},
-{num:3,name:'Nahuel Molina',pos:'LAT',icon:'⚡'},
-{num:4,name:'Cristian Romero',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Lisandro Martinez',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Marcos Acuna',pos:'LAT',icon:'⚡'},
-{num:7,name:'Rodrigo De Paul',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Enzo Fernandez',pos:'MEI',icon:'🌟'},
-{num:9,name:'Alexis Mac Allister',pos:'MEI',icon:'💪'},
-{num:10,name:'Lionel Messi',pos:'MEI',icon:'⭐'},
-{num:11,name:'Angel Di Maria',pos:'PNT',icon:'💨'},
-{num:12,name:'Lautaro Martinez',pos:'ATA',icon:'🔥'},
-{num:13,name:'Julian Alvarez',pos:'ATA',icon:'💥'},
-{num:14,name:'Alejandro Garnacho',pos:'PNT',icon:'✨'},
-]},
+{num:2,name:'Emiliano Martinez',pos:'GOL',icon:'🧤'},{num:3,name:'Nahuel Molina',pos:'LAT',icon:'⚡'},
+{num:4,name:'Cristian Romero',pos:'ZAG',icon:'🛡️'},{num:5,name:'Lisandro Martinez',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'Marcos Acuna',pos:'LAT',icon:'⚡'},{num:7,name:'Rodrigo De Paul',pos:'VOL',icon:'⚙️'},
+{num:8,name:'Enzo Fernandez',pos:'MEI',icon:'🌟'},{num:9,name:'Alexis Mac Allister',pos:'MEI',icon:'💪'},
+{num:10,name:'Lionel Messi',pos:'MEI',icon:'⭐'},{num:11,name:'Angel Di Maria',pos:'PNT',icon:'💨'},
+{num:12,name:'Lautaro Martinez',pos:'ATA',icon:'🔥'},{num:13,name:'Julian Alvarez',pos:'ATA',icon:'💥'},
+{num:14,name:'Alejandro Garnacho',pos:'PNT',icon:'✨'}]},
 {id:'FRA',name:'Franca',group:'A',flag:'🇫🇷',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Mike Maignan',pos:'GOL',icon:'🧤'},
-{num:3,name:'Jules Kounde',pos:'LAT',icon:'⚡'},
-{num:4,name:'William Saliba',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Dayot Upamecano',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Theo Hernandez',pos:'LAT',icon:'⚡'},
-{num:7,name:'Aurelien Tchouameni',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Eduardo Camavinga',pos:'MEI',icon:'🌟'},
-{num:9,name:'Antoine Griezmann',pos:'MEI',icon:'⭐'},
-{num:10,name:'Kylian Mbappe',pos:'PNT',icon:'🔥'},
-{num:11,name:'Ousmane Dembele',pos:'PNT',icon:'💨'},
-{num:12,name:'Marcus Thuram',pos:'ATA',icon:'💪'},
-]},
+{num:2,name:'Mike Maignan',pos:'GOL',icon:'🧤'},{num:3,name:'Jules Kounde',pos:'LAT',icon:'⚡'},
+{num:4,name:'William Saliba',pos:'ZAG',icon:'🛡️'},{num:5,name:'Dayot Upamecano',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'Theo Hernandez',pos:'LAT',icon:'⚡'},{num:7,name:'Aurelien Tchouameni',pos:'VOL',icon:'⚙️'},
+{num:8,name:'Eduardo Camavinga',pos:'MEI',icon:'🌟'},{num:9,name:'Antoine Griezmann',pos:'MEI',icon:'⭐'},
+{num:10,name:'Kylian Mbappe',pos:'PNT',icon:'🔥'},{num:11,name:'Ousmane Dembele',pos:'PNT',icon:'💨'},
+{num:12,name:'Marcus Thuram',pos:'ATA',icon:'💪'}]},
 {id:'ENG',name:'Inglaterra',group:'A',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Jordan Pickford',pos:'GOL',icon:'🧤'},
-{num:3,name:'Trent Alexander-Arnold',pos:'LAT',icon:'⚡'},
-{num:4,name:'John Stones',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Marc Guehi',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Kieran Trippier',pos:'LAT',icon:'⚡'},
-{num:7,name:'Declan Rice',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Jude Bellingham',pos:'MEI',icon:'⭐'},
-{num:9,name:'Bukayo Saka',pos:'PNT',icon:'🌟'},
-{num:10,name:'Phil Foden',pos:'MEI',icon:'💨'},
-{num:11,name:'Cole Palmer',pos:'MEI',icon:'🎯'},
-{num:12,name:'Harry Kane',pos:'ATA',icon:'🔥'},
-]},
+{num:2,name:'Jordan Pickford',pos:'GOL',icon:'🧤'},{num:3,name:'Trent Alexander-Arnold',pos:'LAT',icon:'⚡'},
+{num:4,name:'John Stones',pos:'ZAG',icon:'🛡️'},{num:5,name:'Marc Guehi',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'Kieran Trippier',pos:'LAT',icon:'⚡'},{num:7,name:'Declan Rice',pos:'VOL',icon:'⚙️'},
+{num:8,name:'Jude Bellingham',pos:'MEI',icon:'⭐'},{num:9,name:'Bukayo Saka',pos:'PNT',icon:'🌟'},
+{num:10,name:'Phil Foden',pos:'MEI',icon:'💨'},{num:11,name:'Cole Palmer',pos:'MEI',icon:'🎯'},
+{num:12,name:'Harry Kane',pos:'ATA',icon:'🔥'}]},
 {id:'ESP',name:'Espanha',group:'B',flag:'🇪🇸',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Unai Simon',pos:'GOL',icon:'🧤'},
-{num:3,name:'Dani Carvajal',pos:'LAT',icon:'⚡'},
-{num:4,name:'Robin Le Normand',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Aymeric Laporte',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Alejandro Balde',pos:'LAT',icon:'⚡'},
-{num:7,name:'Rodri',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Pedri',pos:'MEI',icon:'🌟'},
-{num:9,name:'Gavi',pos:'MEI',icon:'🎯'},
-{num:10,name:'Lamine Yamal',pos:'PNT',icon:'⭐'},
-{num:11,name:'Alvaro Morata',pos:'ATA',icon:'⚽'},
-{num:12,name:'Nico Williams',pos:'PNT',icon:'🔥'},
-{num:13,name:'Ferran Torres',pos:'PNT',icon:'💨'},
-]},
+{num:2,name:'Unai Simon',pos:'GOL',icon:'🧤'},{num:3,name:'Dani Carvajal',pos:'LAT',icon:'⚡'},
+{num:4,name:'Robin Le Normand',pos:'ZAG',icon:'🛡️'},{num:5,name:'Aymeric Laporte',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'Alejandro Balde',pos:'LAT',icon:'⚡'},{num:7,name:'Rodri',pos:'VOL',icon:'⚙️'},
+{num:8,name:'Pedri',pos:'MEI',icon:'🌟'},{num:9,name:'Gavi',pos:'MEI',icon:'🎯'},
+{num:10,name:'Lamine Yamal',pos:'PNT',icon:'⭐'},{num:11,name:'Alvaro Morata',pos:'ATA',icon:'⚽'},
+{num:12,name:'Nico Williams',pos:'PNT',icon:'🔥'},{num:13,name:'Ferran Torres',pos:'PNT',icon:'💨'}]},
 {id:'POR',name:'Portugal',group:'B',flag:'🇵🇹',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Diogo Costa',pos:'GOL',icon:'🧤'},
-{num:3,name:'Joao Cancelo',pos:'LAT',icon:'⚡'},
-{num:4,name:'Ruben Dias',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Goncalo Inacio',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Nuno Mendes',pos:'LAT',icon:'⚡'},
-{num:7,name:'Vitinha',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Bernardo Silva',pos:'MEI',icon:'⭐'},
-{num:9,name:'Bruno Fernandes',pos:'MEI',icon:'🌟'},
-{num:10,name:'Cristiano Ronaldo',pos:'ATA',icon:'🏆'},
-{num:11,name:'Rafael Leao',pos:'PNT',icon:'💨'},
-{num:12,name:'Goncalo Ramos',pos:'ATA',icon:'🎯'},
-]},
+{num:2,name:'Diogo Costa',pos:'GOL',icon:'🧤'},{num:3,name:'Joao Cancelo',pos:'LAT',icon:'⚡'},
+{num:4,name:'Ruben Dias',pos:'ZAG',icon:'🛡️'},{num:5,name:'Goncalo Inacio',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'Nuno Mendes',pos:'LAT',icon:'⚡'},{num:7,name:'Vitinha',pos:'VOL',icon:'⚙️'},
+{num:8,name:'Bernardo Silva',pos:'MEI',icon:'⭐'},{num:9,name:'Bruno Fernandes',pos:'MEI',icon:'🌟'},
+{num:10,name:'Cristiano Ronaldo',pos:'ATA',icon:'🏆'},{num:11,name:'Rafael Leao',pos:'PNT',icon:'💨'},
+{num:12,name:'Goncalo Ramos',pos:'ATA',icon:'🎯'}]},
 {id:'GER',name:'Alemanha',group:'B',flag:'🇩🇪',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Manuel Neuer',pos:'GOL',icon:'🧤'},
-{num:3,name:'Joshua Kimmich',pos:'LAT',icon:'⚡'},
-{num:4,name:'Antonio Rudiger',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Nico Schlotterbeck',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'David Raum',pos:'LAT',icon:'⚡'},
-{num:7,name:'Ilkay Gundogan',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Leon Goretzka',pos:'MEI',icon:'💪'},
-{num:9,name:'Jamal Musiala',pos:'MEI',icon:'⭐'},
-{num:10,name:'Kai Havertz',pos:'ATA',icon:'🌟'},
-{num:11,name:'Serge Gnabry',pos:'PNT',icon:'💨'},
-{num:12,name:'Florian Wirtz',pos:'MEI',icon:'🔥'},
-]},
+{num:2,name:'Manuel Neuer',pos:'GOL',icon:'🧤'},{num:3,name:'Joshua Kimmich',pos:'LAT',icon:'⚡'},
+{num:4,name:'Antonio Rudiger',pos:'ZAG',icon:'🛡️'},{num:5,name:'Nico Schlotterbeck',pos:'ZAG',icon:'🛡️'},
+{num:6,name:'David Raum',pos:'LAT',icon:'⚡'},{num:7,name:'Ilkay Gundogan',pos:'VOL',icon:'⚙️'},
+{num:8,name:'Jamal Musiala',pos:'MEI',icon:'⭐'},{num:9,name:'Kai Havertz',pos:'ATA',icon:'🌟'},
+{num:10,name:'Serge Gnabry',pos:'PNT',icon:'💨'},{num:11,name:'Florian Wirtz',pos:'MEI',icon:'🔥'}]},
 {id:'NED',name:'Holanda',group:'B',flag:'🇳🇱',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Bart Verbruggen',pos:'GOL',icon:'🧤'},
-{num:3,name:'Denzel Dumfries',pos:'LAT',icon:'⚡'},
-{num:4,name:'Virgil van Dijk',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Stefan de Vrij',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Nathan Ake',pos:'LAT',icon:'⚡'},
-{num:7,name:'Frenkie de Jong',pos:'VOL',icon:'⚙️'},
-{num:8,name:'Tijjani Reijnders',pos:'MEI',icon:'🌟'},
-{num:9,name:'Cody Gakpo',pos:'PNT',icon:'💨'},
-{num:10,name:'Xavi Simons',pos:'MEI',icon:'⭐'},
-{num:11,name:'Brian Brobbey',pos:'ATA',icon:'💪'},
-]},
+{num:2,name:'Bart Verbruggen',pos:'GOL',icon:'🧤'},{num:3,name:'Denzel Dumfries',pos:'LAT',icon:'⚡'},
+{num:4,name:'Virgil van Dijk',pos:'ZAG',icon:'🛡️'},{num:5,name:'Frenkie de Jong',pos:'VOL',icon:'⚙️'},
+{num:6,name:'Tijjani Reijnders',pos:'MEI',icon:'🌟'},{num:7,name:'Cody Gakpo',pos:'PNT',icon:'💨'},
+{num:8,name:'Xavi Simons',pos:'MEI',icon:'⭐'},{num:9,name:'Brian Brobbey',pos:'ATA',icon:'💪'}]},
 {id:'ITA',name:'Italia',group:'C',flag:'🇮🇹',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Gianluigi Donnarumma',pos:'GOL',icon:'🧤'},
-{num:3,name:'Giovanni Di Lorenzo',pos:'LAT',icon:'⚡'},
-{num:4,name:'Alessandro Bastoni',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Giorgio Scalvini',pos:'ZAG',icon:'🛡️'},
-{num:6,name:'Jorginho',pos:'VOL',icon:'⚙️'},
-{num:7,name:'Nicolo Barella',pos:'MEI',icon:'💪'},
-{num:8,name:'Federico Chiesa',pos:'PNT',icon:'🌟'},
-{num:9,name:'Mateo Retegui',pos:'ATA',icon:'🔥'},
-{num:10,name:'Giacomo Raspadori',pos:'ATA',icon:'⚽'},
-{num:11,name:'Lorenzo Pellegrini',pos:'MEI',icon:'🎯'},
-]},
+{num:2,name:'Gianluigi Donnarumma',pos:'GOL',icon:'🧤'},{num:3,name:'Alessandro Bastoni',pos:'ZAG',icon:'🛡️'},
+{num:4,name:'Nicolo Barella',pos:'MEI',icon:'💪'},{num:5,name:'Federico Chiesa',pos:'PNT',icon:'🌟'},
+{num:6,name:'Mateo Retegui',pos:'ATA',icon:'🔥'},{num:7,name:'Giacomo Raspadori',pos:'ATA',icon:'⚽'}]},
 {id:'CRO',name:'Croacia',group:'C',flag:'🇭🇷',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Dominik Livakovic',pos:'GOL',icon:'🧤'},
-{num:3,name:'Josko Gvardiol',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Luka Modric',pos:'VOL',icon:'⭐'},
-{num:5,name:'Mateo Kovacic',pos:'MEI',icon:'🌟'},
-{num:6,name:'Marcelo Brozovic',pos:'VOL',icon:'⚙️'},
-{num:7,name:'Ivan Perisic',pos:'PNT',icon:'💨'},
-{num:8,name:'Ante Budimir',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Dominik Livakovic',pos:'GOL',icon:'🧤'},{num:3,name:'Josko Gvardiol',pos:'ZAG',icon:'🛡️'},
+{num:4,name:'Luka Modric',pos:'VOL',icon:'⭐'},{num:5,name:'Mateo Kovacic',pos:'MEI',icon:'🌟'},
+{num:6,name:'Ivan Perisic',pos:'PNT',icon:'💨'},{num:7,name:'Ante Budimir',pos:'ATA',icon:'⚽'}]},
 {id:'BEL',name:'Belgica',group:'C',flag:'🇧🇪',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Thibaut Courtois',pos:'GOL',icon:'🧤'},
-{num:3,name:'Thomas Meunier',pos:'LAT',icon:'⚡'},
-{num:4,name:'Jan Vertonghen',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Axel Witsel',pos:'VOL',icon:'⚙️'},
-{num:6,name:'Kevin De Bruyne',pos:'MEI',icon:'⭐'},
-{num:7,name:'Eden Hazard',pos:'PNT',icon:'🌟'},
-{num:8,name:'Romelu Lukaku',pos:'ATA',icon:'💪'},
-]},
+{num:2,name:'Thibaut Courtois',pos:'GOL',icon:'🧤'},{num:3,name:'Kevin De Bruyne',pos:'MEI',icon:'⭐'},
+{num:4,name:'Romelu Lukaku',pos:'ATA',icon:'💪'},{num:5,name:'Eden Hazard',pos:'PNT',icon:'🌟'}]},
 {id:'DEN',name:'Dinamarca',group:'C',flag:'🇩🇰',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Kasper Schmeichel',pos:'GOL',icon:'🧤'},
-{num:3,name:'Simon Kjaer',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Andreas Christensen',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Christian Eriksen',pos:'MEI',icon:'⭐'},
-{num:6,name:'Thomas Delaney',pos:'VOL',icon:'⚙️'},
-{num:7,name:'Mikkel Damsgaard',pos:'PNT',icon:'💨'},
-{num:8,name:'Kasper Dolberg',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Kasper Schmeichel',pos:'GOL',icon:'🧤'},{num:3,name:'Christian Eriksen',pos:'MEI',icon:'⭐'},
+{num:4,name:'Simon Kjaer',pos:'ZAG',icon:'🛡️'},{num:5,name:'Kasper Dolberg',pos:'ATA',icon:'⚽'}]},
 {id:'URU',name:'Uruguai',group:'D',flag:'🇺🇾',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Fernando Muslera',pos:'GOL',icon:'🧤'},
-{num:3,name:'Jose Maria Gimenez',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Diego Godin',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Lucas Torreira',pos:'VOL',icon:'⚙️'},
-{num:6,name:'Federico Valverde',pos:'MEI',icon:'⭐'},
-{num:7,name:'Rodrigo Bentancur',pos:'MEI',icon:'💪'},
-{num:8,name:'Darwin Nunez',pos:'ATA',icon:'💥'},
-{num:9,name:'Luis Suarez',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Fernando Muslera',pos:'GOL',icon:'🧤'},{num:3,name:'Federico Valverde',pos:'MEI',icon:'⭐'},
+{num:4,name:'Darwin Nunez',pos:'ATA',icon:'💥'},{num:5,name:'Luis Suarez',pos:'ATA',icon:'⚽'},
+{num:6,name:'Rodrigo Bentancur',pos:'MEI',icon:'💪'}]},
 {id:'COL',name:'Colombia',group:'D',flag:'🇨🇴',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'David Ospina',pos:'GOL',icon:'🧤'},
-{num:3,name:'Davinson Sanchez',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Yerry Mina',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Wilmar Barrios',pos:'VOL',icon:'⚙️'},
-{num:6,name:'James Rodriguez',pos:'MEI',icon:'🌟'},
-{num:7,name:'Luis Diaz',pos:'PNT',icon:'💨'},
-{num:8,name:'Juan Cuadrado',pos:'PNT',icon:'⭐'},
-{num:9,name:'Rafael Santos Borre',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'David Ospina',pos:'GOL',icon:'🧤'},{num:3,name:'James Rodriguez',pos:'MEI',icon:'🌟'},
+{num:4,name:'Luis Diaz',pos:'PNT',icon:'💨'},{num:5,name:'Juan Cuadrado',pos:'PNT',icon:'⭐'}]},
 {id:'ECU',name:'Equador',group:'D',flag:'🇪🇨',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Hernan Galindez',pos:'GOL',icon:'🧤'},
-{num:3,name:'Piero Hincapie',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Moises Caicedo',pos:'VOL',icon:'⚙️'},
-{num:5,name:'Gonzalo Plata',pos:'PNT',icon:'🌟'},
-{num:6,name:'Enner Valencia',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Hernan Galindez',pos:'GOL',icon:'🧤'},{num:3,name:'Moises Caicedo',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Gonzalo Plata',pos:'PNT',icon:'🌟'},{num:5,name:'Enner Valencia',pos:'ATA',icon:'⚽'}]},
 {id:'CHI',name:'Chile',group:'D',flag:'🇨🇱',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Claudio Bravo',pos:'GOL',icon:'🧤'},
-{num:3,name:'Gary Medel',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Charles Aranguiz',pos:'VOL',icon:'⚙️'},
-{num:5,name:'Arturo Vidal',pos:'MEI',icon:'💪'},
-{num:6,name:'Alexis Sanchez',pos:'PNT',icon:'⭐'},
-{num:7,name:'Ben Brereton Diaz',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Claudio Bravo',pos:'GOL',icon:'🧤'},{num:3,name:'Arturo Vidal',pos:'MEI',icon:'💪'},
+{num:4,name:'Alexis Sanchez',pos:'PNT',icon:'⭐'},{num:5,name:'Ben Brereton Diaz',pos:'ATA',icon:'⚽'}]},
 {id:'MEX',name:'Mexico',group:'E',flag:'🇲🇽',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Guillermo Ochoa',pos:'GOL',icon:'🧤'},
-{num:3,name:'Jorge Sanchez',pos:'LAT',icon:'⚡'},
-{num:4,name:'Cesar Montes',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Edson Alvarez',pos:'VOL',icon:'⚙️'},
-{num:6,name:'Hirving Lozano',pos:'PNT',icon:'💨'},
-{num:7,name:'Andres Guardado',pos:'MEI',icon:'🎯'},
-{num:8,name:'Raul Jimenez',pos:'ATA',icon:'⚽'},
-{num:9,name:'Alexis Vega',pos:'PNT',icon:'🌟'},
-{num:10,name:'Uriel Antuna',pos:'PNT',icon:'⚡'},
-]},
+{num:2,name:'Guillermo Ochoa',pos:'GOL',icon:'🧤'},{num:3,name:'Edson Alvarez',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Hirving Lozano',pos:'PNT',icon:'💨'},{num:5,name:'Raul Jimenez',pos:'ATA',icon:'⚽'},
+{num:6,name:'Andres Guardado',pos:'MEI',icon:'🎯'}]},
 {id:'USA',name:'Estados Unidos',group:'E',flag:'🇺🇸',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Matt Turner',pos:'GOL',icon:'🧤'},
-{num:3,name:'Sergino Dest',pos:'LAT',icon:'⚡'},
-{num:4,name:'Walker Zimmerman',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Tyler Adams',pos:'VOL',icon:'⚙️'},
-{num:6,name:'Weston McKennie',pos:'MEI',icon:'💪'},
-{num:7,name:'Christian Pulisic',pos:'MEI',icon:'⭐'},
-{num:8,name:'Gio Reyna',pos:'PNT',icon:'✨'},
-{num:9,name:'Josh Sargent',pos:'ATA',icon:'⚽'},
-{num:10,name:'Ricardo Pepi',pos:'ATA',icon:'💥'},
-{num:11,name:'Brenden Aaronson',pos:'MEI',icon:'🌟'},
-]},
+{num:2,name:'Matt Turner',pos:'GOL',icon:'🧤'},{num:3,name:'Tyler Adams',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Christian Pulisic',pos:'MEI',icon:'⭐'},{num:5,name:'Gio Reyna',pos:'PNT',icon:'✨'},
+{num:6,name:'Ricardo Pepi',pos:'ATA',icon:'💥'},{num:7,name:'Brenden Aaronson',pos:'MEI',icon:'🌟'},
+{num:8,name:'Weston McKennie',pos:'MEI',icon:'💪'}]},
 {id:'CAN',name:'Canada',group:'E',flag:'🇨🇦',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Milan Borjan',pos:'GOL',icon:'🧤'},
-{num:3,name:'Alistair Johnston',pos:'LAT',icon:'⚡'},
-{num:4,name:'Kamal Miller',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Atiba Hutchinson',pos:'VOL',icon:'⚙️'},
-{num:6,name:'Jonathan Osorio',pos:'MEI',icon:'🎯'},
-{num:7,name:'Tajon Buchanan',pos:'PNT',icon:'💨'},
-{num:8,name:'Jonathan David',pos:'ATA',icon:'🌟'},
-{num:9,name:'Cyle Larin',pos:'ATA',icon:'⚽'},
-{num:10,name:'Alphonso Davies',pos:'LAT',icon:'⭐'},
-]},
+{num:2,name:'Milan Borjan',pos:'GOL',icon:'🧤'},{num:3,name:'Alphonso Davies',pos:'LAT',icon:'⭐'},
+{num:4,name:'Jonathan David',pos:'ATA',icon:'🌟'},{num:5,name:'Cyle Larin',pos:'ATA',icon:'⚽'},
+{num:6,name:'Tajon Buchanan',pos:'PNT',icon:'💨'}]},
 {id:'PAN',name:'Panama',group:'E',flag:'🇵🇦',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Luis Mejia',pos:'GOL',icon:'🧤'},
-{num:3,name:'Fidel Escobar',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Anibal Godoy',pos:'VOL',icon:'⚙️'},
-{num:5,name:'Adalberto Carrasquilla',pos:'MEI',icon:'🎯'},
-{num:6,name:'Ismael Diaz',pos:'ATA',icon:'⚽'},
-{num:7,name:'Rolando Blackburn',pos:'ATA',icon:'💪'},
-]},
+{num:2,name:'Luis Mejia',pos:'GOL',icon:'🧤'},{num:3,name:'Anibal Godoy',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Ismael Diaz',pos:'ATA',icon:'⚽'}]},
 {id:'JPN',name:'Japao',group:'F',flag:'🇯🇵',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Shuichi Gonda',pos:'GOL',icon:'🧤'},
-{num:3,name:'Wataru Endo',pos:'VOL',icon:'⚙️'},
-{num:4,name:'Junya Ito',pos:'PNT',icon:'💨'},
-{num:5,name:'Daichi Kamada',pos:'MEI',icon:'🎯'},
-{num:6,name:'Takumi Minamino',pos:'MEI',icon:'🌟'},
-{num:7,name:'Ritsu Doan',pos:'PNT',icon:'⚡'},
-{num:8,name:'Ayase Ueda',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Shuichi Gonda',pos:'GOL',icon:'🧤'},{num:3,name:'Wataru Endo',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Daichi Kamada',pos:'MEI',icon:'🎯'},{num:5,name:'Takumi Minamino',pos:'MEI',icon:'🌟'},
+{num:6,name:'Ayase Ueda',pos:'ATA',icon:'⚽'}]},
 {id:'KOR',name:'Coreia do Sul',group:'F',flag:'🇰🇷',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Jo Hyeon-woo',pos:'GOL',icon:'🧤'},
-{num:3,name:'Kim Min-jae',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Jung Woo-young',pos:'VOL',icon:'⚙️'},
-{num:5,name:'Son Heung-min',pos:'PNT',icon:'⭐'},
-{num:6,name:'Lee Kang-in',pos:'MEI',icon:'🌟'},
-{num:7,name:'Hwang Hee-chan',pos:'PNT',icon:'💨'},
-]},
+{num:2,name:'Jo Hyeon-woo',pos:'GOL',icon:'🧤'},{num:3,name:'Kim Min-jae',pos:'ZAG',icon:'🛡️'},
+{num:4,name:'Son Heung-min',pos:'PNT',icon:'⭐'},{num:5,name:'Lee Kang-in',pos:'MEI',icon:'🌟'}]},
 {id:'MAR',name:'Marrocos',group:'F',flag:'🇲🇦',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Yassine Bounou',pos:'GOL',icon:'🧤'},
-{num:3,name:'Achraf Hakimi',pos:'LAT',icon:'⚡'},
-{num:4,name:'Nayef Aguerd',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Sofyan Amrabat',pos:'VOL',icon:'⚙️'},
-{num:6,name:'Hakim Ziyech',pos:'MEI',icon:'⭐'},
-{num:7,name:'Youssef En-Nesyri',pos:'ATA',icon:'🌟'},
-]},
+{num:2,name:'Yassine Bounou',pos:'GOL',icon:'🧤'},{num:3,name:'Achraf Hakimi',pos:'LAT',icon:'⚡'},
+{num:4,name:'Hakim Ziyech',pos:'MEI',icon:'⭐'},{num:5,name:'Youssef En-Nesyri',pos:'ATA',icon:'🌟'}]},
 {id:'AUS',name:'Australia',group:'F',flag:'🇦🇺',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Mat Ryan',pos:'GOL',icon:'🧤'},
-{num:3,name:'Harry Souttar',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Jackson Irvine',pos:'MEI',icon:'⚙️'},
-{num:5,name:'Aaron Mooy',pos:'MEI',icon:'🎯'},
-{num:6,name:'Mathew Leckie',pos:'PNT',icon:'💨'},
-{num:7,name:'Mitchell Duke',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Mat Ryan',pos:'GOL',icon:'🧤'},{num:3,name:'Aaron Mooy',pos:'MEI',icon:'🎯'},
+{num:4,name:'Mathew Leckie',pos:'PNT',icon:'💨'},{num:5,name:'Mitchell Duke',pos:'ATA',icon:'⚽'}]},
 {id:'SEN',name:'Senegal',group:'G',flag:'🇸🇳',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Edouard Mendy',pos:'GOL',icon:'🧤'},
-{num:3,name:'Kalidou Koulibaly',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Idrissa Gana Gueye',pos:'VOL',icon:'💪'},
-{num:5,name:'Sadio Mane',pos:'PNT',icon:'⭐'},
-{num:6,name:'Ismaila Sarr',pos:'PNT',icon:'💨'},
-{num:7,name:'Boulaye Dia',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Edouard Mendy',pos:'GOL',icon:'🧤'},{num:3,name:'Kalidou Koulibaly',pos:'ZAG',icon:'🛡️'},
+{num:4,name:'Sadio Mane',pos:'PNT',icon:'⭐'},{num:5,name:'Ismaila Sarr',pos:'PNT',icon:'💨'}]},
 {id:'NIG',name:'Nigeria',group:'G',flag:'🇳🇬',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Francis Uzoho',pos:'GOL',icon:'🧤'},
-{num:3,name:'Wilfred Ndidi',pos:'VOL',icon:'⚙️'},
-{num:4,name:'Alex Iwobi',pos:'MEI',icon:'🎯'},
-{num:5,name:'Ademola Lookman',pos:'PNT',icon:'⭐'},
-{num:6,name:'Samuel Chukwueze',pos:'PNT',icon:'💨'},
-{num:7,name:'Victor Osimhen',pos:'ATA',icon:'🌟'},
-]},
+{num:2,name:'Francis Uzoho',pos:'GOL',icon:'🧤'},{num:3,name:'Wilfred Ndidi',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Ademola Lookman',pos:'PNT',icon:'⭐'},{num:5,name:'Victor Osimhen',pos:'ATA',icon:'🌟'}]},
 {id:'CMR',name:'Camaroes',group:'G',flag:'🇨🇲',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Andre Onana',pos:'GOL',icon:'🧤'},
-{num:3,name:'Collins Fai',pos:'LAT',icon:'⚡'},
-{num:4,name:'Nico Nkoulou',pos:'ZAG',icon:'🛡️'},
-{num:5,name:'Bryan Mbeumo',pos:'PNT',icon:'🌟'},
-{num:6,name:'Vincent Aboubakar',pos:'ATA',icon:'⭐'},
-]},
+{num:2,name:'Andre Onana',pos:'GOL',icon:'🧤'},{num:3,name:'Bryan Mbeumo',pos:'PNT',icon:'🌟'},
+{num:4,name:'Vincent Aboubakar',pos:'ATA',icon:'⭐'}]},
 {id:'GHA',name:'Gana',group:'G',flag:'🇬🇭',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Lawrence Ati Zigi',pos:'GOL',icon:'🧤'},
-{num:3,name:'Thomas Partey',pos:'VOL',icon:'⚙️'},
-{num:4,name:'Jordan Ayew',pos:'PNT',icon:'💨'},
-{num:5,name:'Mohammed Kudus',pos:'MEI',icon:'⭐'},
-{num:6,name:'Antoine Semenyo',pos:'PNT',icon:'🌟'},
-]},
+{num:2,name:'Thomas Partey',pos:'VOL',icon:'⚙️'},{num:3,name:'Mohammed Kudus',pos:'MEI',icon:'⭐'},
+{num:4,name:'Jordan Ayew',pos:'PNT',icon:'💨'}]},
 {id:'SRB',name:'Serbia',group:'H',flag:'🇷🇸',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Predrag Rajkovic',pos:'GOL',icon:'🧤'},
-{num:3,name:'Nikola Milenkovic',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Sergej Milinkovic-Savic',pos:'MEI',icon:'⭐'},
-{num:5,name:'Dusan Tadic',pos:'MEI',icon:'🎯'},
-{num:6,name:'Dusan Vlahovic',pos:'ATA',icon:'🌟'},
-{num:7,name:'Aleksandar Mitrovic',pos:'ATA',icon:'💪'},
-]},
+{num:2,name:'Predrag Rajkovic',pos:'GOL',icon:'🧤'},{num:3,name:'Sergej Milinkovic-Savic',pos:'MEI',icon:'⭐'},
+{num:4,name:'Dusan Vlahovic',pos:'ATA',icon:'🌟'},{num:5,name:'Aleksandar Mitrovic',pos:'ATA',icon:'💪'}]},
 {id:'POL',name:'Polonia',group:'H',flag:'🇵🇱',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Wojciech Szczesny',pos:'GOL',icon:'🧤'},
-{num:3,name:'Jan Bednarek',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Piotr Zielinski',pos:'MEI',icon:'🎯'},
-{num:5,name:'Robert Lewandowski',pos:'ATA',icon:'⭐'},
-{num:6,name:'Jakub Kaminski',pos:'PNT',icon:'💨'},
-]},
+{num:2,name:'Wojciech Szczesny',pos:'GOL',icon:'🧤'},{num:3,name:'Piotr Zielinski',pos:'MEI',icon:'🎯'},
+{num:4,name:'Robert Lewandowski',pos:'ATA',icon:'⭐'}]},
 {id:'TUR',name:'Turquia',group:'H',flag:'🇹🇷',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Altay Bayindir',pos:'GOL',icon:'🧤'},
-{num:3,name:'Merih Demiral',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Hakan Calhanoglu',pos:'VOL',icon:'⚙️'},
-{num:5,name:'Arda Guler',pos:'MEI',icon:'⭐'},
-{num:6,name:'Kerem Akturkoglu',pos:'PNT',icon:'💨'},
-{num:7,name:'Cenk Tosun',pos:'ATA',icon:'⚽'},
-]},
+{num:2,name:'Altay Bayindir',pos:'GOL',icon:'🧤'},{num:3,name:'Hakan Calhanoglu',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Arda Guler',pos:'MEI',icon:'⭐'},{num:5,name:'Kerem Akturkoglu',pos:'PNT',icon:'💨'}]},
 {id:'EGY',name:'Egito',group:'H',flag:'🇪🇬',players:[
 {num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},
-{num:2,name:'Mohamed El-Shenawy',pos:'GOL',icon:'🧤'},
-{num:3,name:'Ahmed Hegazy',pos:'ZAG',icon:'🛡️'},
-{num:4,name:'Tarek Hamed',pos:'VOL',icon:'⚙️'},
-{num:5,name:'Mohamed Salah',pos:'PNT',icon:'⭐'},
-{num:6,name:'Trezeguet',pos:'PNT',icon:'💨'},
-{num:7,name:'Mostafa Mohamed',pos:'ATA',icon:'🌟'},
-]},
+{num:2,name:'Mohamed El-Shenawy',pos:'GOL',icon:'🧤'},{num:3,name:'Tarek Hamed',pos:'VOL',icon:'⚙️'},
+{num:4,name:'Mohamed Salah',pos:'PNT',icon:'⭐'},{num:5,name:'Mostafa Mohamed',pos:'ATA',icon:'🌟'}]},
 ];
-
-// Build flat sticker list
 const ALL_STICKERS=[...SPECIAL];
-TEAMS.forEach(t=>{
-  t.players.forEach(p=>{
-    ALL_STICKERS.push({
-      id:`${t.id}-${p.num}`,
-      num:`${t.id}-${String(p.num).padStart(2,'0')}`,
-      name:p.name,type:p.type||'player',icon:p.icon||'⚽',pos:p.pos||'JOG',
-      team:t.name,teamId:t.id,flag:t.flag,group:t.group
-    });
-  });
-});
+TEAMS.forEach(t=>t.players.forEach(p=>ALL_STICKERS.push({
+  id:`${t.id}-${p.num}`,num:`${t.id}-${String(p.num).padStart(2,'0')}`,
+  name:p.name,type:p.type||'player',icon:p.icon||'⚽',pos:p.pos||'JOG',
+  team:t.name,teamId:t.id,flag:t.flag,group:t.group
+})));
 
-// STATE
-let collection={},recent=[],currentView='album',filterMissing=false,albumSearch='',selectedSticker=null,cameraStream=null,facingMode='environment';
-
-function loadState(){try{const s=localStorage.getItem('copa2026_v3');if(s){const d=JSON.parse(s);collection=d.collection||{};recent=d.recent||[];}}catch(e){collection={};recent=[];}}
-function saveState(){localStorage.setItem('copa2026_v3',JSON.stringify({collection,recent}));}
+let collection={},recent=[],currentView='album',filterMissing=false,albumSearch='',selectedSticker=null,selectedManual=null,cameraStream=null,facingMode='environment',currentAIMatch=null;
+function loadState(){try{const s=localStorage.getItem('copa2026_v4');if(s){const d=JSON.parse(s);collection=d.collection||{};recent=d.recent||[];}}catch(e){collection={};recent=[];}}
+function saveState(){localStorage.setItem('copa2026_v4',JSON.stringify({collection,recent}));}
 function getCount(id){return(collection[id]||{}).count||0;}
 function hasSticker(id){return getCount(id)>0;}
 function isDuplicate(id){return getCount(id)>1;}
@@ -862,19 +202,16 @@ function totalDuplicates(){return Object.values(collection).reduce((a,v)=>a+Math
 function totalMissing(){return ALL_STICKERS.length-totalHave();}
 function totalPct(){return Math.round(totalHave()/ALL_STICKERS.length*100);}
 
-// ONBOARDING
 function closeOnboarding(){document.getElementById('onboarding').style.display='none';localStorage.setItem('copa2026_onb','1');initApp();}
 function checkOnboarding(){if(localStorage.getItem('copa2026_onb')){document.getElementById('onboarding').style.display='none';initApp();}}
-
 function initApp(){loadState();renderAlbum();updateHeader();updateDupBadge();updateAIStatusDot();}
 
 function updateHeader(){
-  const h=totalHave(),m=totalMissing(),d=totalDuplicates(),p=totalPct();
-  document.getElementById('h-total').textContent=h;
-  document.getElementById('h-missing').textContent=m;
-  document.getElementById('h-dup').textContent=d;
-  document.getElementById('h-pct').textContent=p+'%';
-  document.getElementById('h-bar').style.width=p+'%';
+  document.getElementById('h-total').textContent=totalHave();
+  document.getElementById('h-missing').textContent=totalMissing();
+  document.getElementById('h-dup').textContent=totalDuplicates();
+  document.getElementById('h-pct').textContent=totalPct()+'%';
+  document.getElementById('h-bar').style.width=totalPct()+'%';
 }
 function updateDupBadge(){const d=totalDuplicates(),b=document.getElementById('dup-badge');b.textContent=d;b.style.display=d>0?'flex':'none';}
 
@@ -882,8 +219,7 @@ function switchView(view,btn){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('view-'+view).classList.add('active');
-  btn.classList.add('active');
-  currentView=view;
+  btn.classList.add('active');currentView=view;
   if(view==='duplicates')renderDuplicates();
   if(view==='stats')renderStats();
   if(view==='camera')startCamera();
@@ -900,62 +236,49 @@ function toggleFilterMissing(){
 }
 
 function renderAlbum(){
-  const cont=document.getElementById('album-content');
-  cont.innerHTML='';
-  const q=albumSearch;
-
-  // Special stickers
+  const cont=document.getElementById('album-content');cont.innerHTML='';const q=albumSearch;
   let specs=SPECIAL.filter(s=>!q||(s.name.toLowerCase().includes(q)||s.num.toLowerCase().includes(q)));
   if(filterMissing)specs=specs.filter(s=>!hasSticker(s.id));
   if(specs.length){
-    const haveSp=SPECIAL.filter(s=>hasSticker(s.id)).length;
+    const hv=SPECIAL.filter(s=>hasSticker(s.id)).length;
     const sec=document.createElement('div');sec.className='group-section fade-in';
-    sec.innerHTML=`<div class="group-header" onclick="toggleSection(this)"><span style="font-size:20px">⭐</span><span class="group-title">Figurinhas Especiais</span><span class="group-progress">${haveSp}/${SPECIAL.length}</span><span class="group-toggle">▼</span></div><div class="special-grid" id="sec-SPECIAL"></div>`;
+    sec.innerHTML=`<div class="group-header" onclick="toggleSection(this)"><span style="font-size:20px">⭐</span><span class="group-title">Especiais</span><span class="group-progress">${hv}/${SPECIAL.length}</span><span style="color:var(--text2);font-size:12px">▼</span></div><div class="special-grid" id="sec-SPECIAL"></div>`;
     cont.appendChild(sec);
     const grid=sec.querySelector('#sec-SPECIAL');
-    specs.forEach(s=>{
-      const cnt=getCount(s.id),cls=cnt>1?'duplicate':cnt===1?'have':'missing';
-      const chip=document.createElement('div');chip.className=`special-chip ${cls}`;chip.onclick=()=>openStickerModal(s.id);
-      chip.innerHTML=`${cnt>1?`<div class="dup-badge">x${cnt}</div>`:''}<div class="special-chip-icon">${s.icon}</div><div style="font-size:8px;line-height:1.2;margin-top:2px">${s.name}</div><div style="font-size:7px;opacity:.5">${s.num}</div>`;
-      grid.appendChild(chip);
-    });
+    specs.forEach(s=>{const cnt=getCount(s.id),cls=cnt>1?'duplicate':cnt===1?'have':'missing';
+      const c2=document.createElement('div');c2.className=`special-chip ${cls}`;c2.onclick=()=>openStickerModal(s.id);
+      c2.innerHTML=`${cnt>1?`<div class="dup-badge">x${cnt}</div>`:''}<div style="font-size:20px">${s.icon}</div><div style="font-size:8px;line-height:1.2;margin-top:2px">${s.name}</div><div style="font-size:7px;opacity:.5">${s.num}</div>`;
+      grid.appendChild(c2);});
   }
-
-  // Teams by group
   const groups=[...new Set(TEAMS.map(t=>t.group))];
   groups.forEach(g=>{
-    const teamsG=TEAMS.filter(t=>t.group===g);
-    const allG=teamsG.flatMap(t=>t.players.map(p=>({...p,id:`${t.id}-${p.num}`})));
-    const haveG=allG.filter(s=>hasSticker(s.id)).length;
+    const tg=TEAMS.filter(t=>t.group===g);
+    const ag=tg.flatMap(t=>t.players.map(p=>({...p,id:`${t.id}-${p.num}`})));
+    const hg=ag.filter(s=>hasSticker(s.id)).length;
     const sec=document.createElement('div');sec.className='group-section fade-in';
-    sec.innerHTML=`<div class="group-header" onclick="toggleSection(this)"><span style="font-size:16px">🏆</span><span class="group-title">Grupo ${g}</span><span class="group-progress">${haveG}/${allG.length}</span><span class="group-toggle">▼</span></div><div class="group-body" id="sec-G${g}"></div>`;
+    sec.innerHTML=`<div class="group-header" onclick="toggleSection(this)"><span style="font-size:16px">🏆</span><span class="group-title">Grupo ${g}</span><span class="group-progress">${hg}/${ag.length}</span><span style="color:var(--text2);font-size:12px">▼</span></div><div class="group-body" id="sec-G${g}"></div>`;
     cont.appendChild(sec);
     const body=sec.querySelector(`#sec-G${g}`);
-    teamsG.forEach(team=>{
+    tg.forEach(team=>{
       let players=team.players.map(p=>({...p,id:`${team.id}-${p.num}`}));
       if(q)players=players.filter(p=>p.name.toLowerCase().includes(q)||p.id.toLowerCase().includes(q));
       if(filterMissing)players=players.filter(p=>!hasSticker(p.id));
       if(!players.length)return;
-      const haveT=team.players.filter(p=>hasSticker(`${team.id}-${p.num}`)).length;
-      const totalT=team.players.length;
-      const pctT=Math.round(haveT/totalT*100);
+      const ht=team.players.filter(p=>hasSticker(`${team.id}-${p.num}`)).length;
+      const tt=team.players.length,pt=Math.round(ht/tt*100);
       const card=document.createElement('div');card.className='team-card';
-      card.innerHTML=`<div class="team-header" onclick="toggleTeamStickers(this)"><div class="team-flag">${team.flag}</div><div class="team-info"><div class="team-name">${team.name}</div><div class="team-count">${haveT}/${totalT}</div></div><div style="font-size:11px;color:var(--text2)">${pctT}%</div><div class="team-mini-bar"><div class="team-mini-fill" style="width:${pctT}%"></div></div></div><div class="stickers-grid" style="display:none" id="tg-${team.id}"></div>`;
+      card.innerHTML=`<div class="team-header" onclick="toggleTeamStickers(this)"><div class="team-flag">${team.flag}</div><div class="team-info"><div class="team-name">${team.name}</div><div class="team-count">${ht}/${tt}</div></div><div style="font-size:11px;color:var(--text2)">${pt}%</div><div class="team-mini-bar"><div class="team-mini-fill" style="width:${pt}%"></div></div></div><div class="stickers-grid" style="display:none" id="tg-${team.id}"></div>`;
       body.appendChild(card);
       const grid=card.querySelector(`#tg-${team.id}`);
-      players.forEach(p=>{
-        const cnt=getCount(p.id),cls=cnt>1?'duplicate':cnt===1?'have':'missing';
-        const bc=p.type==='badge'?'badge-type':'';
-        const chip=document.createElement('div');chip.className=`sticker-chip ${cls} ${bc}`;chip.onclick=()=>openStickerModal(p.id);
+      players.forEach(p=>{const cnt=getCount(p.id),cls=cnt>1?'duplicate':cnt===1?'have':'missing',bc=p.type==='badge'?'badge-type':'';
+        const ch=document.createElement('div');ch.className=`sticker-chip ${cls} ${bc}`;ch.onclick=()=>openStickerModal(p.id);
         const nm=p.name.length>12?p.name.substring(0,11)+'…':p.name;
-        chip.innerHTML=`${cnt>1?`<div class="dup-badge">x${cnt}</div>`:cnt===1?'<div class="check-mark">✓</div>':''}<div class="sticker-icon">${p.icon||'⚽'}</div><div>${nm}</div><div class="sticker-num">${p.id}</div><div class="sticker-pos">${p.pos||''}</div>`;
-        grid.appendChild(chip);
-      });
+        ch.innerHTML=`${cnt>1?`<div class="dup-badge">x${cnt}</div>`:cnt===1?'<div class="check-mark">✓</div>':''}<div class="sticker-icon">${p.icon||'⚽'}</div><div>${nm}</div><div class="sticker-num">${p.id}</div>`;
+        grid.appendChild(ch);});
     });
   });
 }
-
-function toggleSection(el){const b=el.nextElementSibling,t=el.querySelector('.group-toggle');t.textContent=b.classList.toggle('collapsed')?'▶':'▼';}
+function toggleSection(el){const b=el.nextElementSibling,t=el.querySelector('span:last-child');t.textContent=b.classList.toggle('collapsed')?'▶':'▼';}
 function toggleTeamStickers(el){const g=el.nextElementSibling;g.style.display=g.style.display==='none'?'grid':'none';}
 
 function openStickerModal(id){
@@ -964,22 +287,20 @@ function openStickerModal(id){
   const stLbl=cnt>1?`Voce tem ${cnt} (${cnt-1} repetida${cnt>2?'s':''})`
     :cnt===1?'Na sua colecao':'Nao coletada ainda';
   document.getElementById('modal-sticker-big').innerHTML=`
-    <div class="modal-sticker-num">${s.num}</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:4px">${s.num}</div>
     <div class="modal-sticker-icon">${s.icon}</div>
     <div class="modal-sticker-name">${s.name}</div>
     <div class="modal-sticker-pos">${s.pos} ${s.flag||''} ${s.team}</div>
     <div class="modal-status-badge ${status}">${stLbl}</div>`;
   const actions=document.getElementById('modal-actions');
-  if(cnt===0){
-    actions.innerHTML=`<button class="modal-btn primary" onclick="addSticker('${id}');closeStickerModal()">Marcar como coletada</button><button class="modal-btn secondary" onclick="closeStickerModal()">Fechar</button>`;
-  }else{
-    actions.innerHTML=`<button class="modal-btn primary" onclick="addSticker('${id}');closeStickerModal()">Adicionar repetida</button><button class="modal-btn danger" onclick="removeSticker('${id}');closeStickerModal()">Remover uma</button><button class="modal-btn secondary" onclick="closeStickerModal()">Fechar</button>`;
-  }
+  actions.innerHTML=cnt===0
+    ?`<button class="modal-btn primary" onclick="addSticker('${id}');closeStickerModal()">Marcar como coletada</button><button class="modal-btn secondary" onclick="closeStickerModal()">Fechar</button>`
+    :`<button class="modal-btn primary" onclick="addSticker('${id}');closeStickerModal()">Adicionar repetida</button><button class="modal-btn danger" onclick="removeSticker('${id}');closeStickerModal()">Remover uma</button><button class="modal-btn secondary" onclick="closeStickerModal()">Fechar</button>`;
   document.getElementById('sticker-modal').classList.add('show');
 }
 function closeStickerModal(e){if(e&&e.target!==document.getElementById('sticker-modal'))return;document.getElementById('sticker-modal').classList.remove('show');}
 
-function addSticker(id,silent=false){
+function addSticker(id){
   if(!collection[id])collection[id]={count:0,addedAt:Date.now()};
   collection[id].count++;
   if(collection[id].count===1)collection[id].addedAt=Date.now();
@@ -990,7 +311,8 @@ function addSticker(id,silent=false){
   if(currentView==='album')renderAlbum();
   if(currentView==='duplicates')renderDuplicates();
   if(currentView==='stats')renderStats();
-  if(!silent){const cnt=getCount(id);showToast(cnt===1?`${s?s.name:id} adicionada!`:`Repetida #${cnt-1} de ${s?s.name:id}`,cnt===1?'success':'info');}
+  const cnt=getCount(id);
+  showToast(cnt===1?`${s?s.name:id} adicionada!`:`Repetida #${cnt-1} de ${s?s.name:id}`,cnt===1?'success':'info');
 }
 function removeSticker(id){
   if(!collection[id]||collection[id].count===0)return;
@@ -1002,7 +324,6 @@ function removeSticker(id){
   showToast(`${s?s.name:id} removida`,'error');
 }
 
-// CAMERA
 async function startCamera(){
   document.getElementById('cam-live').style.display='block';
   document.getElementById('photo-review').classList.remove('show');
@@ -1012,12 +333,8 @@ async function startCamera(){
     if(cameraStream)cameraStream.getTracks().forEach(t=>t.stop());
     cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode,width:{ideal:1280},height:{ideal:720}},audio:false});
     document.getElementById('cam-video').srcObject=cameraStream;
-    document.getElementById('cam-status').textContent='Camera pronta — aponte para a figurinha';
-    document.getElementById('capture-btn').classList.add('ready');
-  }catch(e){
-    document.getElementById('cam-status').textContent='Sem acesso a camera — use o botao manual';
-    document.getElementById('capture-btn').classList.remove('ready');
-  }
+    document.getElementById('cam-status').textContent='Camera pronta';
+  }catch(e){document.getElementById('cam-status').textContent='Sem camera — use adicionar manual';}
 }
 function stopCamera(){if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}}
 async function switchCamera(){facingMode=facingMode==='environment'?'user':'environment';await startCamera();}
@@ -1030,12 +347,13 @@ function capturePhoto(){
   stopCamera();
   const dataUrl=canvas.toDataURL('image/jpeg',0.85);
   document.getElementById('cam-live').style.display='none';
-  const rev=document.getElementById('photo-review');rev.classList.add('show');
+  document.getElementById('photo-review').classList.add('show');
   document.getElementById('photo-thumb').src=dataUrl;
-  document.getElementById('sticker-search').value='';
+  document.getElementById('sticker-search').style.display='none';
   document.getElementById('search-results').innerHTML='';
-  document.getElementById('confirm-add-btn').disabled=true;
-  selectedSticker=null;
+  document.getElementById('manual-confirm-row').style.display='none';
+  selectedManual=null;
+  processPhotoWithAI(dataUrl);
 }
 function retakePhoto(){document.getElementById('photo-review').classList.remove('show');startCamera();}
 function showManualAdd(){
@@ -1046,53 +364,154 @@ function showManualAdd(){
   document.getElementById('manual-search').value='';
   document.getElementById('manual-results').innerHTML='';
   document.getElementById('manual-add-btn').disabled=true;
-  selectedSticker=null;
+  selectedManual=null;
 }
 function hideManualAdd(){document.getElementById('manual-add-panel').style.display='none';startCamera();}
+function showManualSearchFromAI(){
+  showAIPanel('');
+  document.getElementById('sticker-search').style.display='block';
+  document.getElementById('sticker-search').value='';
+  document.getElementById('search-results').innerHTML='';
+  document.getElementById('manual-confirm-row').style.display='flex';
+  document.getElementById('confirm-add-btn').disabled=true;
+  selectedManual=null;
+  document.getElementById('sticker-search').focus();
+}
+
+function showAIPanel(mode){
+  document.getElementById('ai-loading').style.display=mode==='loading'?'block':'none';
+  document.getElementById('ai-result').style.display=mode==='result'?'block':'none';
+  document.getElementById('ai-nokey').style.display=mode==='nokey'?'block':'none';
+  document.getElementById('ai-error').style.display=mode==='error'?'block':'none';
+}
+
+async function processPhotoWithAI(dataUrl){
+  const apiKey=localStorage.getItem('copa2026_gemini_key');
+  if(!apiKey){showAIPanel('nokey');return;}
+  showAIPanel('loading');
+  try{
+    const base64=dataUrl.split(',')[1];
+    const aiResult=await callGeminiVision(base64);
+    const matches=findStickerMatch(aiResult);
+    showAIMatchResult(aiResult,matches);
+  }catch(e){
+    showAIPanel('error');
+    document.getElementById('ai-error-msg').textContent=e.message||'Erro — tente busca manual';
+  }
+}
+
+async function callGeminiVision(base64img){
+  const apiKey=localStorage.getItem('copa2026_gemini_key');
+  const playerList=ALL_STICKERS.filter(s=>s.type!=='badge'&&s.teamId!=='SPECIAL')
+    .map(s=>`${s.name} - ${s.team} [${s.id}]`).join('\n');
+  const prompt=`You are analyzing a Panini World Cup 2026 sticker photo.\n\nPlayers in the album:\n${playerList}\n\nIdentify the player and return ONLY valid JSON:\n{"player":"Full Name","team":"Team","sticker_id":"XXX-00","confidence":0.0}\n\nIf team badge/crest: {"player":"Distintivo","team":"Team","sticker_id":"XXX-01","confidence":0.9}\nIf cannot identify: {"player":null,"team":null,"sticker_id":null,"confidence":0}`;
+  const res=await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt},{inline_data:{mime_type:'image/jpeg',data:base64img}}]}],
+    generationConfig:{temperature:0.1,maxOutputTokens:300}})}
+  );
+  if(!res.ok){const err=await res.json();throw new Error(err.error?.message||`Erro HTTP ${res.status}`);}
+  const data=await res.json();
+  const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
+  const m=text.match(/\{[\s\S]*?\}/);
+  if(!m)throw new Error('Resposta invalida da IA');
+  return JSON.parse(m[0]);
+}
+
+function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').trim();}
+function findStickerMatch(ai){
+  if(!ai)return[];const res=[];
+  if(ai.sticker_id){const d=ALL_STICKERS.find(s=>s.id===ai.sticker_id);if(d)res.push({...d,score:10});}
+  if(ai.player&&ai.player!=='null'){
+    const pn=norm(ai.player),tn=norm(ai.team||''),pw=pn.split(' ').filter(w=>w.length>2);
+    ALL_STICKERS.forEach(s=>{
+      if(res.find(r=>r.id===s.id))return;
+      const sn=norm(s.name),st=norm(s.team);let sc=0;
+      if(sn===pn)sc+=9;else if(sn.includes(pn)||pn.includes(sn))sc+=6;
+      else{const sw=sn.split(' ');pw.forEach(w=>{if(sw.some(x=>x.includes(w)||w.includes(x)))sc+=2;});}
+      if(tn&&(st.includes(tn)||tn.includes(st)))sc+=2;
+      if(sc>3)res.push({...s,score:sc});
+    });
+  }
+  return res.sort((a,b)=>b.score-a.score).slice(0,5);
+}
+
+function showAIMatchResult(ai,matches){
+  showAIPanel('result');
+  const top=matches[0];
+  const conf=Math.round((ai.confidence||0)*100);
+  document.getElementById('ai-conf').textContent=conf+'%';
+  if(top){
+    currentAIMatch=top.id;
+    const cnt=getCount(top.id);
+    document.getElementById('ai-flag').textContent=top.flag||top.icon||'⚽';
+    document.getElementById('ai-name').textContent=top.name;
+    document.getElementById('ai-detail').textContent=`${top.num} • ${top.team} • ${top.pos}${cnt>0?' • JÁ COLETADA':''}`;
+    const cb=document.getElementById('ai-confirm-btn');
+    if(cnt>0){cb.textContent='Adicionar como Repetida';cb.style.background='linear-gradient(135deg,#FFA500,#FF6B00)';}
+    else{cb.textContent='Confirmar e Adicionar';cb.style.background='linear-gradient(135deg,var(--gold),var(--gold2))';}
+    cb.disabled=false;
+    const others=matches.slice(1,4);
+    if(others.length){
+      document.getElementById('ai-others').style.display='block';
+      const list=document.getElementById('ai-others-list');list.innerHTML='';
+      others.forEach(s=>{
+        const el=document.createElement('div');
+        el.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:8px;cursor:pointer;margin-bottom:4px;touch-action:manipulation';
+        el.innerHTML=`<span style="font-size:18px">${s.flag||s.icon}</span><div style="flex:1"><div style="font-size:12px;font-weight:600">${s.name}</div><div style="font-size:10px;color:var(--text2)">${s.num} • ${s.team}</div></div>`;
+        el.onclick=()=>{currentAIMatch=s.id;document.getElementById('ai-flag').textContent=s.flag||s.icon;document.getElementById('ai-name').textContent=s.name;document.getElementById('ai-detail').textContent=`${s.num} • ${s.team}`;document.getElementById('ai-others').style.display='none';showToast('Selecionado: '+s.name,'info');};
+        list.appendChild(el);
+      });
+    }
+  }else{
+    currentAIMatch=null;
+    document.getElementById('ai-flag').textContent='❓';
+    document.getElementById('ai-name').textContent='Nao identificado';
+    document.getElementById('ai-detail').textContent=ai.player?`IA detectou: "${ai.player}" — nao encontrado`:'Figurinha nao reconhecida';
+    document.getElementById('ai-confirm-btn').disabled=true;
+  }
+}
+
+function confirmAIMatch(){
+  if(!currentAIMatch)return;
+  addSticker(currentAIMatch);currentAIMatch=null;
+  document.getElementById('photo-review').classList.remove('show');
+  showAIPanel('');startCamera();
+}
+function confirmManualAdd(mode){
+  const id=mode==='manual'?selectedManual:selectedManual;
+  if(!id)return;
+  addSticker(id);selectedManual=null;
+  if(mode==='manual'){hideManualAdd();}
+  else{document.getElementById('photo-review').classList.remove('show');startCamera();}
+}
 
 function searchSticker(q,cid='search-results'){
   const cont=document.getElementById(cid);
-  const btn=document.getElementById(cid==='search-results'?'confirm-add-btn':'manual-add-btn');
-  selectedSticker=null;btn.disabled=true;cont.innerHTML='';
+  const isMain=cid==='search-results';
+  const btn=document.getElementById(isMain?'confirm-add-btn':'manual-add-btn');
+  selectedManual=null;if(btn)btn.disabled=true;cont.innerHTML='';
   if(!q.trim())return;
   const ql=q.toLowerCase().trim();
-  const res=ALL_STICKERS.filter(s=>
-    s.name.toLowerCase().includes(ql)||s.id.toLowerCase().includes(ql)||
-    s.num.toLowerCase().includes(ql)||(s.team&&s.team.toLowerCase().includes(ql))||
-    (s.pos&&s.pos.toLowerCase().includes(ql))
-  ).slice(0,12);
+  const res=ALL_STICKERS.filter(s=>s.name.toLowerCase().includes(ql)||s.id.toLowerCase().includes(ql)||(s.team&&s.team.toLowerCase().includes(ql))).slice(0,12);
   if(!res.length){cont.innerHTML='<div style="text-align:center;padding:12px;color:var(--text2);font-size:13px">Nenhuma figurinha encontrada</div>';return;}
   res.forEach(s=>{
-    const cnt=getCount(s.id),status=cnt>1?'duplicate':cnt===1?'have':'missing';
-    const stxt=cnt>1?`x${cnt}`:cnt===1?'Tenho':'Falta';
+    const cnt=getCount(s.id),stxt=cnt>1?`x${cnt}`:cnt===1?'Tenho':'Falta';
     const item=document.createElement('div');item.className='search-result-item';
-    item.innerHTML=`<div class="sri-flag">${s.flag||s.icon}</div><div class="sri-info"><div class="sri-name">${s.name}</div><div class="sri-detail">${s.num} - ${s.team} - ${s.pos}</div></div><div class="sri-status ${status}">${stxt}</div>`;
-    item.onclick=()=>{
-      cont.querySelectorAll('.search-result-item').forEach(el=>el.classList.remove('selected'));
-      item.classList.add('selected');selectedSticker=s.id;btn.disabled=false;
-    };
+    item.innerHTML=`<div class="sri-flag">${s.flag||s.icon}</div><div class="sri-info"><div class="sri-name">${s.name}</div><div class="sri-detail">${s.num} - ${s.team}</div></div><div class="sri-status ${cnt>0?'have':'missing'}">${stxt}</div>`;
+    item.onclick=()=>{cont.querySelectorAll('.search-result-item').forEach(el=>el.classList.remove('selected'));item.classList.add('selected');selectedManual=s.id;if(btn)btn.disabled=false;};
     cont.appendChild(item);
   });
-}
-function confirmAdd(){
-  if(!selectedSticker)return;
-  addSticker(selectedSticker);
-  selectedSticker=null;
-  document.querySelectorAll('.search-result-item').forEach(el=>el.classList.remove('selected'));
-  document.getElementById('confirm-add-btn').disabled=true;
-  document.getElementById('manual-add-btn').disabled=true;
-  const sq=document.getElementById('sticker-search').value,mq=document.getElementById('manual-search').value;
-  if(sq)setTimeout(()=>searchSticker(sq,'search-results'),100);
-  if(mq)setTimeout(()=>searchSticker(mq,'manual-results'),100);
 }
 
 function renderDuplicates(){
   const dups=ALL_STICKERS.filter(s=>isDuplicate(s.id));
   const list=document.getElementById('dup-list'),summ=document.getElementById('dup-summary');
   list.innerHTML='';
-  if(!dups.length){summ.textContent='';list.innerHTML='<div class="empty-state"><div class="empty-icon">🎴</div><div class="empty-text">Nenhuma figurinha repetida ainda.<br>Continue colecionando!</div></div>';return;}
+  if(!dups.length){summ.textContent='';list.innerHTML='<div class="empty-state"><div class="empty-icon">🎴</div><div>Nenhuma repetida ainda!</div></div>';return;}
   const tot=dups.reduce((a,s)=>a+(getCount(s.id)-1),0);
-  summ.textContent=`${dups.length} figurinha${dups.length>1?'s':''} com repeticao - ${tot} repetida${tot>1?'s':''} no total`;
+  summ.textContent=`${dups.length} figurinha${dups.length>1?'s':''} com repeticao • ${tot} repetida${tot>1?'s':''} no total`;
   dups.sort((a,b)=>getCount(b.id)-getCount(a.id));
   dups.forEach(s=>{
     const cnt=getCount(s.id),item=document.createElement('div');item.className='dup-item';
@@ -1104,57 +523,72 @@ function renderDuplicates(){
 function renderStats(){
   const h=totalHave(),m=totalMissing(),d=totalDuplicates(),p=totalPct();
   document.getElementById('stats-cards').innerHTML=`
-    <div class="stat-card"><div class="stat-val green">${h}</div><div class="stat-lbl">Coletadas</div></div>
-    <div class="stat-card"><div class="stat-val red">${m}</div><div class="stat-lbl">Faltando</div></div>
-    <div class="stat-card"><div class="stat-val gold">${d}</div><div class="stat-lbl">Repetidas</div></div>
-    <div class="stat-card"><div class="stat-val blue">${ALL_STICKERS.length}</div><div class="stat-lbl">Total Album</div></div>
+    <div class="stat-card"><div class="stat-val green">${h}</div><div style="font-size:11px;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px">Coletadas</div></div>
+    <div class="stat-card"><div class="stat-val red">${m}</div><div style="font-size:11px;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px">Faltando</div></div>
+    <div class="stat-card"><div class="stat-val gold">${d}</div><div style="font-size:11px;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px">Repetidas</div></div>
+    <div class="stat-card"><div class="stat-val blue">${ALL_STICKERS.length}</div><div style="font-size:11px;color:var(--text2);margin-top:4px;text-transform:uppercase;letter-spacing:.5px">Total Album</div></div>
     <div class="stat-card wide" style="text-align:left;padding:16px">
       <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:700">Progresso Geral</span><span style="font-size:20px;font-weight:900;color:var(--gold)">${p}%</span></div>
       <div class="progress-bar" style="height:10px"><div class="progress-fill" style="width:${p}%"></div></div>
       <div style="margin-top:6px;font-size:11px;color:var(--text2)">${h} de ${ALL_STICKERS.length} figurinhas</div>
     </div>`;
-
   const tpl=document.getElementById('team-progress-list');tpl.innerHTML='';
-  const ts=TEAMS.map(t=>{const tot=t.players.length,hv=t.players.filter(p=>hasSticker(`${t.id}-${p.num}`)).length;return{...t,tot,hv,pct:Math.round(hv/tot*100)};}).sort((a,b)=>b.pct-a.pct);
-  ts.forEach(t=>{
-    const item=document.createElement('div');item.className='tpl-item';
+  TEAMS.map(t=>{const tot=t.players.length,hv=t.players.filter(p=>hasSticker(`${t.id}-${p.num}`)).length;return{...t,tot,hv,pct:Math.round(hv/tot*100)};}).sort((a,b)=>b.pct-a.pct)
+  .forEach(t=>{const item=document.createElement('div');item.className='tpl-item';
     item.innerHTML=`<div class="tpl-top"><div class="tpl-flag">${t.flag}</div><div class="tpl-name">${t.name}</div><div class="tpl-pct">${t.pct}%</div></div><div class="tpl-bar"><div class="tpl-fill" style="width:${t.pct}%"></div></div>`;
-    tpl.appendChild(item);
-  });
-
+    tpl.appendChild(item);});
   const rl=document.getElementById('recent-list');rl.innerHTML='';
-  if(!recent.length){rl.innerHTML='<div class="empty-state"><div class="empty-icon">📷</div><div class="empty-text">Adicione figurinhas para ver o historico</div></div>';return;}
-  recent.slice(0,10).forEach(r=>{
-    const s=ALL_STICKERS.find(x=>x.id===r.id),t=timeAgo(r.at);
+  if(!recent.length){rl.innerHTML='<div class="empty-state"><div class="empty-icon">📷</div><div>Adicione figurinhas para ver o historico</div></div>';return;}
+  recent.slice(0,10).forEach(r=>{const s=ALL_STICKERS.find(x=>x.id===r.id);
     const item=document.createElement('div');item.className='recent-item';
-    item.innerHTML=`<div class="recent-dot"></div><div class="recent-info"><div class="recent-name">${s?s.flag||s.icon:''} ${r.name}</div><div class="recent-time">${r.team} - ${t}</div></div>`;
-    rl.appendChild(item);
-  });
+    const mins=Math.floor((Date.now()-r.at)/60000);
+    const t=mins<1?'agora':mins<60?mins+'min':Math.floor(mins/60)+'h';
+    item.innerHTML=`<div class="recent-dot"></div><div style="flex:1"><div class="recent-name">${s?s.flag||s.icon:''} ${r.name}</div><div class="recent-time">${r.team} • ${t} atras</div></div>`;
+    rl.appendChild(item);});
 }
-function timeAgo(ts){const d=Date.now()-ts;if(d<60000)return 'agora';if(d<3600000)return Math.floor(d/60000)+'min atras';if(d<86400000)return Math.floor(d/3600000)+'h atras';return Math.floor(d/86400000)+'d atras';}
 
 function buildDupText(){
   const dups=ALL_STICKERS.filter(s=>isDuplicate(s.id));
-  if(!dups.length)return 'Nenhuma figurinha repetida';
-  let txt='COPA 2026 - Minhas Repetidas\n\n';
-  dups.forEach(s=>{txt+=`- ${s.num} ${s.name} (${s.team}) x${getCount(s.id)-1}\n`;});
-  return txt;
+  if(!dups.length)return 'Nenhuma repetida';
+  return 'COPA 2026 - Repetidas\n\n'+dups.map(s=>`- ${s.num} ${s.name} (${s.team}) x${getCount(s.id)-1}`).join('\n');
 }
 function showShareModal(){document.getElementById('share-modal').classList.add('show');}
 function closeShareModal(e){if(e&&e.target!==document.getElementById('share-modal'))return;document.getElementById('share-modal').classList.remove('show');}
-function exportText(){
-  const b=new Blob([buildDupText()],{type:'text/plain;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');
-  a.href=u;a.download='repetidas-copa2026.txt';a.click();closeShareModal();
-}
+function exportText(){const b=new Blob([buildDupText()],{type:'text/plain'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='repetidas.txt';a.click();closeShareModal();}
 function exportCSV(){
   const dups=ALL_STICKERS.filter(s=>isDuplicate(s.id));
-  let csv='Numero,Nome,Selecao,Posicao,Repetidas\n';
-  dups.forEach(s=>{csv+=`"${s.num}","${s.name}","${s.team}","${s.pos}",${getCount(s.id)-1}\n`;});
-  const b=new Blob([csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');
-  a.href=u;a.download='repetidas-copa2026.csv';a.click();closeShareModal();
+  let csv='Numero,Nome,Selecao,Repetidas\n';dups.forEach(s=>{csv+=`"${s.num}","${s.name}","${s.team}",${getCount(s.id)-1}\n`;});
+  const b=new Blob([csv],{type:'text/csv'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='repetidas.csv';a.click();closeShareModal();
 }
 function shareWhatsApp(){window.open(`https://wa.me/?text=${encodeURIComponent(buildDupText())}`,'_blank');closeShareModal();}
 function copyToClipboard(){navigator.clipboard.writeText(buildDupText()).then(()=>showToast('Copiado!','success'));closeShareModal();}
+
+function openSettings(){
+  const key=localStorage.getItem('copa2026_gemini_key')||'';
+  document.getElementById('gemini-key-input').value=key;
+  checkKeyFormat(key);updateAIStatusDot();
+  document.getElementById('key-test-result').style.display='none';
+  document.getElementById('settings-modal').classList.add('show');
+}
+function closeSettings(e){if(e&&e.target!==document.getElementById('settings-modal'))return;document.getElementById('settings-modal').classList.remove('show');}
+function saveApiKey(){
+  const key=document.getElementById('gemini-key-input').value.trim();
+  if(key.length<20){showToast('Chave muito curta','error');return;}
+  localStorage.setItem('copa2026_gemini_key',key);
+  updateAIStatusDot();closeSettings();
+  showToast('IA ativada com sucesso!','success');
+}
+function checkKeyFormat(val){
+  const hint=document.getElementById('key-hint');
+  if(!val){hint.textContent='';return;}
+  if(val.length>=20){hint.textContent='✅ Formato valido';hint.style.color='var(--green)';}
+  else{hint.textContent='⚠️ Chave muito curta';hint.style.color='var(--red)';}
+}
+function updateAIStatusDot(){
+  const dot=document.getElementById('ai-status-dot');
+  if(!dot)return;
+  dot.style.background=localStorage.getItem('copa2026_gemini_key')?'var(--green)':'var(--text2)';
+}
 
 let toastTimer;
 function showToast(msg,type='info'){
@@ -1162,318 +596,8 @@ function showToast(msg,type='info'){
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='',3000);
 }
 
-
-// ═══════════════════════════════════════════════════════
-// AI RECOGNITION — Gemini Vision
-// ═══════════════════════════════════════════════════════
-let currentAIMatch = null;
-
-async function processPhotoWithAI(dataUrl) {
-  // Show photo thumb
-  document.getElementById('photo-thumb').src = dataUrl;
-  document.getElementById('sticker-search').value = '';
-  document.getElementById('search-results').innerHTML = '';
-  document.getElementById('confirm-add-btn').disabled = true;
-  selectedSticker = null;
-
-  // Show AI panel
-  const panel = document.getElementById('ai-result-panel');
-  panel.style.display = 'block';
-  document.getElementById('ai-loading').style.display = 'flex';
-  document.getElementById('ai-match-result').style.display = 'none';
-  document.getElementById('ai-no-key').style.display = 'none';
-
-  const apiKey = localStorage.getItem('copa2026_gemini_key');
-  if (!apiKey) {
-    document.getElementById('ai-loading').style.display = 'none';
-    document.getElementById('ai-no-key').style.display = 'block';
-    return;
-  }
-
-  try {
-    setAILoadingMsg('Enviando para análise...');
-    const base64 = dataUrl.split(',')[1];
-    const aiResult = await callGeminiVision(base64);
-    setAILoadingMsg('Buscando na base...');
-    const matches = findStickerMatch(aiResult);
-    showAIMatchResult(aiResult, matches);
-  } catch(e) {
-    document.getElementById('ai-loading').style.display = 'none';
-    document.getElementById('ai-no-key').style.display = 'block';
-    document.getElementById('ai-no-key').innerHTML = `
-      <div style="font-size:32px;margin-bottom:8px">⚠️</div>
-      <div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:4px">Erro no reconhecimento</div>
-      <div style="font-size:12px;color:var(--text2);margin-bottom:16px">${e.message||'Verifique sua chave de API'}</div>
-      <div style="display:flex;gap:8px">
-        <button onclick="showManualSearchFromAI()" class="add-btn" style="flex:1">🔍 Buscar Manualmente</button>
-        <button onclick="retakePhoto()" style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer">📷 Nova Foto</button>
-      </div>`;
-    console.error('AI error:', e);
-  }
-}
-
-function setAILoadingMsg(msg) {
-  document.getElementById('ai-loading-msg').textContent = msg;
-}
-
-async function callGeminiVision(base64img) {
-  const apiKey = localStorage.getItem('copa2026_gemini_key');
-  const teamList = TEAMS.map(t => `${t.name} (${t.id})`).join(', ');
-  const playerList = ALL_STICKERS.filter(s=>s.type!=='badge'&&s.teamId!=='SPECIAL')
-    .map(s=>`${s.name} - ${s.team} [${s.id}]`).join('\n');
-
-  const prompt = `You are analyzing a Panini World Cup 2026 sticker photo.
-
-Available teams: ${teamList}
-
-Available players in the album:
-${playerList}
-
-Look carefully at this sticker image and identify:
-1. The player's full name
-2. Their national team
-3. The sticker ID from the list above (format like BRA-12, ARG-05, etc.)
-4. Your confidence level (0.0 to 1.0)
-
-Return ONLY valid JSON with no extra text:
-{"player":"Full Name","team":"Team Name","sticker_id":"XXX-00","confidence":0.0}
-
-If it's a team badge/crest sticker, return:
-{"player":"Distintivo","team":"Team Name","sticker_id":"XXX-01","confidence":0.0}
-
-If you cannot identify at all, return:
-{"player":null,"team":null,"sticker_id":null,"confidence":0}`;
-
-  const res = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
-    {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        contents: [{parts: [
-          {text: prompt},
-          {inline_data: {mime_type:'image/jpeg', data:base64img}}
-        ]}],
-        generationConfig: {temperature:0.1, maxOutputTokens:300, topP:0.8}
-      })
-    }
-  );
-
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error?.message || `HTTP ${res.status}`);
-  }
-
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-  const jsonMatch = text.match(/\{[\s\S]*?\}/);
-  if (!jsonMatch) throw new Error('Resposta inválida da IA');
-  return JSON.parse(jsonMatch[0]);
-}
-
-function normalize(s) {
-  return (s||'').toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9 ]/g,' ').trim();
-}
-
-function findStickerMatch(aiResult) {
-  if (!aiResult) return [];
-  const results = [];
-
-  // Direct ID match (most reliable)
-  if (aiResult.sticker_id) {
-    const direct = ALL_STICKERS.find(s => s.id === aiResult.sticker_id);
-    if (direct) results.push({...direct, score:10, source:'id'});
-  }
-
-  // Name + team fuzzy match
-  if (aiResult.player && aiResult.player !== 'null') {
-    const pNorm = normalize(aiResult.player);
-    const tNorm = normalize(aiResult.team||'');
-    const pWords = pNorm.split(' ').filter(w=>w.length>2);
-
-    ALL_STICKERS.forEach(s => {
-      if (results.find(r=>r.id===s.id)) return;
-      const sName = normalize(s.name);
-      const sTeam = normalize(s.team);
-      let score = 0;
-
-      if (sName === pNorm) score += 9;
-      else if (sName.includes(pNorm)||pNorm.includes(sName)) score += 6;
-      else {
-        const sWords = sName.split(' ');
-        pWords.forEach(w => { if(sWords.some(sw=>sw.includes(w)||w.includes(sw))) score += 2; });
-      }
-      if (tNorm && (sTeam.includes(tNorm)||tNorm.includes(sTeam))) score += 2;
-      if (score > 3) results.push({...s, score, source:'name'});
-    });
-  }
-
-  return results.sort((a,b)=>b.score-a.score).slice(0,5);
-}
-
-function showAIMatchResult(aiResult, matches) {
-  document.getElementById('ai-loading').style.display = 'none';
-  document.getElementById('ai-match-result').style.display = 'block';
-
-  const top = matches[0];
-  const conf = Math.round((aiResult.confidence||0)*100);
-  document.getElementById('ai-conf-pct').textContent = conf+'%';
-  document.getElementById('ai-confidence-badge').style.background =
-    conf>70?'rgba(0,230,118,.1)':conf>40?'rgba(255,215,0,.1)':'rgba(255,82,82,.1)';
-  document.getElementById('ai-confidence-badge').querySelector('div').style.color =
-    conf>70?'var(--green)':conf>40?'var(--gold)':'var(--red)';
-
-  if (top) {
-    currentAIMatch = top.id;
-    const cnt = getCount(top.id);
-    document.getElementById('ai-match-flag').textContent = top.flag||top.icon||'⚽';
-    document.getElementById('ai-match-name').textContent = top.name;
-    document.getElementById('ai-match-detail').textContent =
-      `${top.num}  •  ${top.team}  •  ${top.pos}${cnt>0?' • JÁ COLETADA ✓':''}`;
-    if (cnt > 0) {
-      document.getElementById('ai-confirm-btn').textContent = '🔁 Adicionar como Repetida';
-      document.getElementById('ai-confirm-btn').style.background = 'linear-gradient(135deg,#FFA500,#FF6B00)';
-    } else {
-      document.getElementById('ai-confirm-btn').textContent = '✅ Confirmar e Adicionar';
-      document.getElementById('ai-confirm-btn').style.background = 'linear-gradient(135deg,var(--gold),var(--gold2))';
-    }
-
-    // Other candidates
-    const others = matches.slice(1,4);
-    if (others.length) {
-      document.getElementById('ai-other-candidates').style.display = 'block';
-      const list = document.getElementById('ai-candidates-list');
-      list.innerHTML = '';
-      others.forEach(s => {
-        const el = document.createElement('div');
-        el.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:8px;cursor:pointer;border:1px solid transparent;transition:.2s';
-        el.innerHTML=`<span style="font-size:18px">${s.flag||s.icon}</span><div style="flex:1"><div style="font-size:12px;font-weight:600">${s.name}</div><div style="font-size:10px;color:var(--text2)">${s.num} • ${s.team}</div></div>`;
-        el.onmouseover=()=>el.style.borderColor='rgba(255,215,0,.4)';
-        el.onmouseout=()=>el.style.borderColor='transparent';
-        el.onclick=()=>{
-          currentAIMatch = s.id;
-          document.getElementById('ai-match-flag').textContent = s.flag||s.icon;
-          document.getElementById('ai-match-name').textContent = s.name;
-          document.getElementById('ai-match-detail').textContent = `${s.num} • ${s.team} • ${s.pos}`;
-          document.getElementById('ai-other-candidates').style.display = 'none';
-          showToast(`Selecionado: ${s.name}`,'info');
-        };
-        list.appendChild(el);
-      });
-    }
-  } else {
-    // No match found
-    currentAIMatch = null;
-    document.getElementById('ai-match-flag').textContent = '❓';
-    document.getElementById('ai-match-name').textContent = 'Não identificado';
-    document.getElementById('ai-match-detail').textContent = aiResult.player
-      ? `IA detectou: "${aiResult.player}" (${aiResult.team||'?'}) — não encontrado na base`
-      : 'Figurinha não reconhecida pela IA';
-    document.getElementById('ai-confirm-btn').disabled = true;
-    document.getElementById('ai-confirm-btn').textContent = '❓ Não identificado';
-    document.getElementById('ai-confidence-badge').style.opacity = '0.5';
-  }
-}
-
-function confirmAIMatch() {
-  if (!currentAIMatch) return;
-  addSticker(currentAIMatch);
-  // Reset camera panel
-  document.getElementById('photo-review').classList.remove('show');
-  document.getElementById('ai-result-panel').style.display = 'none';
-  currentAIMatch = null;
-  startCamera();
-}
-
-function showManualSearchFromAI() {
-  document.getElementById('ai-result-panel').style.display = 'none';
-  // Pre-fill search with AI's player name guess
-  const searchEl = document.getElementById('sticker-search');
-  if (searchEl && !searchEl.value) {
-    // Try to get name from display
-    const nameEl = document.getElementById('ai-match-name');
-    if (nameEl && nameEl.textContent !== '—' && nameEl.textContent !== 'Não identificado') {
-      searchEl.value = nameEl.textContent;
-      searchSticker(nameEl.textContent, 'search-results');
-    }
-  }
-}
-
-// ── SETTINGS ──────────────────────────────────────────
-function openSettings() {
-  const key = localStorage.getItem('copa2026_gemini_key') || '';
-  document.getElementById('gemini-key-input').value = key;
-  checkApiKeyFormat(key);
-  updateAIStatusDot();
-  document.getElementById('settings-modal').classList.add('show');
-}
-function closeSettings(e) {
-  if(e&&e.target!==document.getElementById('settings-modal'))return;
-  document.getElementById('settings-modal').classList.remove('show');
-}
-function saveApiKey() {
-  const key = document.getElementById('gemini-key-input').value.trim();
-  if (!key) { showToast('Digite a chave de API','error'); return; }
-  if (key.length < 20) { showToast('Chave muito curta, verifique','error'); return; }
-  localStorage.setItem('copa2026_gemini_key', key);
-  updateAIStatusDot();
-  closeSettings();
-  showToast('✅ Chave salva! IA ativada.','success');
-}
-function checkApiKeyFormat(val) {
-  const hint = document.getElementById('api-key-hint');
-  if (!val) { hint.textContent=''; return; }
-  if (val.length >= 20) {
-    hint.textContent='✅ Formato válido';
-    hint.style.color='var(--green)';
-  } else {
-    hint.textContent='⚠️ Chave inválida — muito curta';
-    hint.style.color='var(--red)';
-  }
-}
-function updateAIStatusDot() {
-  const dot = document.getElementById('ai-status-dot');
-  const hasKey = !!localStorage.getItem('copa2026_gemini_key');
-  dot.style.background = hasKey ? 'var(--green)' : 'var(--text2)';
-  dot.title = hasKey ? 'IA ativada' : 'Sem chave configurada';
-}
-
 window.addEventListener('load',checkOnboarding);
 window.addEventListener('beforeunload',stopCamera);
 </script>
-
-<div id="install-banner" style="display:none;position:fixed;bottom:72px;left:12px;right:12px;background:#1a2035;border:1px solid rgba(255,215,0,.4);border-radius:14px;padding:12px 16px;z-index:150;display:none;align-items:center;gap:12px;box-shadow:0 8px 32px rgba(0,0,0,.6)">
-  <span style="font-size:28px">📲</span>
-  <div style="flex:1">
-    <div style="font-size:13px;font-weight:700;color:#FFD700">Instalar como App</div>
-    <div style="font-size:11px;color:#8896B3">Acesso direto na tela inicial</div>
-  </div>
-  <button onclick="installPWA()" style="background:linear-gradient(135deg,#FFD700,#FFA500);color:#000;border:none;border-radius:8px;padding:8px 14px;font-weight:700;font-size:12px;cursor:pointer">Instalar</button>
-  <button onclick="document.getElementById('install-banner').style.display='none'" style="background:none;border:none;color:#8896B3;font-size:18px;cursor:pointer;padding:4px">✕</button>
-</div>
-
-<script>
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault(); deferredPrompt = e;
-  const b = document.getElementById('install-banner');
-  b.style.display = 'flex';
-});
-function installPWA() {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();
-  deferredPrompt.userChoice.then(() => {
-    deferredPrompt = null;
-    document.getElementById('install-banner').style.display = 'none';
-  });
-}
-window.addEventListener('appinstalled', () => {
-  document.getElementById('install-banner').style.display = 'none';
-  if(typeof showToast === 'function') showToast('App instalado com sucesso!', 'success');
-});
-</script>
-
 </body>
 </html>
