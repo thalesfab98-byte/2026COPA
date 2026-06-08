@@ -427,7 +427,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
       </div>
       <label style="font-size:12px;color:var(--text2);display:block;margin-bottom:6px;font-weight:600">CHAVE DE API (GEMINI)</label>
       <input id="gemini-key-input" type="password"
-        placeholder="AIzaSy..."
+        placeholder="Cole sua chave aqui..."
         style="width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;outline:none;font-family:monospace;margin-bottom:8px"
         oninput="checkApiKeyFormat(this.value)">
       <div id="api-key-hint" style="font-size:11px;color:var(--text2);margin-bottom:10px"></div>
@@ -1416,7 +1416,7 @@ function closeSettings(e) {
 function saveApiKey() {
   const key = document.getElementById('gemini-key-input').value.trim();
   if (!key) { showToast('Digite a chave de API','error'); return; }
-  if (!key.startsWith('AIza')) { showToast('Chave inválida — deve começar com AIza','error'); return; }
+  if (key.length < 20) { showToast('Chave muito curta, verifique','error'); return; }
   localStorage.setItem('copa2026_gemini_key', key);
   updateAIStatusDot();
   closeSettings();
@@ -1425,12 +1425,12 @@ function saveApiKey() {
 function checkApiKeyFormat(val) {
   const hint = document.getElementById('api-key-hint');
   if (!val) { hint.textContent=''; return; }
-  if (val.startsWith('AIza') && val.length > 30) {
+  if (val.length >= 20) {
     hint.textContent='✅ Formato válido';
     hint.style.color='var(--green)';
   } else {
-    hint.textContent='⚠️ Chave deve começar com "AIza" e ter ~39 caracteres';
-    hint.style.color='var(--gold)';
+    hint.textContent='⚠️ Chave inválida — muito curta';
+    hint.style.color='var(--red)';
   }
 }
 function updateAIStatusDot() {
