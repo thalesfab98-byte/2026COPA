@@ -383,6 +383,89 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 .info-pill{display:inline-flex;align-items:center;gap:4px;background:rgba(79,195,247,.1);
   border:1px solid rgba(79,195,247,.2);color:var(--blue);font-size:10px;font-weight:600;
   padding:3px 10px;border-radius:99px}
+
+/* ═══════════════════════════════════════════════════
+   AUTH SCREEN
+══════════════════════════════════════════════════*/
+#auth-screen{position:fixed;inset:0;z-index:500;background:var(--bg);display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px}
+.auth-logo{font-size:56px;margin-bottom:8px}
+.auth-title{font-size:26px;font-weight:900;color:var(--gold);margin-bottom:4px}
+.auth-sub{font-size:13px;color:var(--text2);margin-bottom:28px;text-align:center}
+.auth-card{width:100%;max-width:360px;background:var(--card);border-radius:20px;padding:24px;border:1px solid var(--border2)}
+.auth-tabs{display:flex;gap:0;margin-bottom:20px;background:var(--bg2);border-radius:10px;padding:3px}
+.auth-tab{flex:1;padding:8px;border:none;background:transparent;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer;border-radius:8px;transition:.2s}
+.auth-tab.active{background:var(--gold);color:#000}
+.auth-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.auth-field label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase}
+.auth-field input{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;color:var(--text1);font-size:14px;outline:none;transition:.2s}
+.auth-field input:focus{border-color:var(--gold)}
+.auth-submit{width:100%;padding:14px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;font-weight:900;font-size:15px;border:none;border-radius:12px;cursor:pointer;margin-top:4px}
+.auth-err{font-size:12px;color:#ff4757;margin-top:8px;text-align:center;min-height:18px}
+.auth-skip{margin-top:16px;font-size:12px;color:var(--text3);cursor:pointer;text-decoration:underline;background:none;border:none}
+
+/* ═══════════════════════════════════════════════════
+   TROCAS / GRUPOS
+══════════════════════════════════════════════════*/
+.troca-header{display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:8px}
+.troca-user{display:flex;align-items:center;gap:8px}
+.troca-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;color:#000}
+.troca-username{font-size:14px;font-weight:700;color:var(--text1)}
+.troca-logout{font-size:11px;color:var(--text3);cursor:pointer;text-decoration:underline;background:none;border:none;padding:4px 8px}
+.group-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.group-item{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:.15s}
+.group-item:active{background:var(--bg3)}
+.group-item-icon{font-size:28px}
+.group-item-info{flex:1}
+.group-item-name{font-size:14px;font-weight:700;color:var(--text1)}
+.group-item-meta{font-size:11px;color:var(--text2);margin-top:2px}
+.group-item-arrow{font-size:18px;color:var(--text3)}
+.empty-groups{text-align:center;padding:32px 16px;color:var(--text2)}
+.empty-groups-icon{font-size:40px;margin-bottom:8px}
+.group-actions{display:flex;gap:8px;margin-bottom:16px}
+.group-btn{flex:1;padding:12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:.15s}
+.group-btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000}
+.group-btn.secondary{background:var(--bg3);color:var(--text1);border:1px solid var(--border2)}
+
+/* Group detail */
+.group-detail-header{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border2);margin-bottom:12px}
+.group-back{background:none;border:none;color:var(--text2);font-size:20px;cursor:pointer;padding:4px}
+.group-detail-name{font-size:16px;font-weight:900;flex:1}
+.group-code-badge{font-size:10px;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:3px 7px;color:var(--text2);cursor:pointer}
+.group-tabs{display:flex;gap:0;background:var(--bg2);border-radius:10px;padding:3px;margin-bottom:12px}
+.group-tab{flex:1;padding:7px;border:none;background:transparent;color:var(--text2);font-weight:700;font-size:11px;cursor:pointer;border-radius:7px;transition:.2s;text-align:center}
+.group-tab.active{background:var(--card);color:var(--text1);box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.member-card{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:12px;margin-bottom:8px}
+.member-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.member-avatar{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#4facfe,#00f2fe);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:12px;color:#000;flex-shrink:0}
+.member-name{font-size:13px;font-weight:700;flex:1}
+.member-badge{font-size:10px;background:rgba(0,230,118,.15);color:var(--green);border-radius:6px;padding:2px 7px;font-weight:700}
+.member-stats{display:flex;gap:8px}
+.member-stat{flex:1;background:var(--bg2);border-radius:8px;padding:7px;text-align:center}
+.member-stat-val{font-size:16px;font-weight:900;color:var(--gold)}
+.member-stat-lbl{font-size:9px;color:var(--text3);margin-top:1px}
+.share-bar{display:flex;gap:8px;padding:10px 0;border-top:1px solid var(--border2);margin-top:8px}
+.share-btn{flex:1;padding:9px;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;border:none;background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
+.share-btn.active{background:rgba(0,230,118,.1);color:var(--green);border-color:var(--green)}
+
+/* Chat */
+.chat-messages{height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:4px 0;margin-bottom:10px}
+.chat-bubble{max-width:78%;padding:8px 12px;border-radius:14px;font-size:13px;line-height:1.45;word-break:break-word}
+.chat-bubble.mine{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;align-self:flex-end;border-bottom-right-radius:4px}
+.chat-bubble.other{background:var(--card);color:var(--text1);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border2)}
+.chat-bubble-name{font-size:9px;font-weight:700;opacity:.7;margin-bottom:2px}
+.chat-input-row{display:flex;gap:8px}
+.chat-input{flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:10px 14px;color:var(--text1);font-size:13px;outline:none}
+.chat-send{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;color:#000;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-system{text-align:center;font-size:10px;color:var(--text3);padding:4px}
+
+/* Comparison */
+.comparison-section{margin-bottom:16px}
+.comparison-section-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.comparison-pill{display:inline-flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:6px 10px;margin:3px;font-size:12px;cursor:pointer}
+.comparison-pill.can-give{border-color:var(--green);background:rgba(0,230,118,.08);color:var(--green)}
+.comparison-pill.can-receive{border-color:var(--gold);background:rgba(255,215,0,.08);color:var(--gold)}
+.comparison-empty{text-align:center;padding:20px;color:var(--text3);font-size:12px}
+
 </style>
 <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Copa%202026%20-%20Meu%20Album%22%2C%22short_name%22%3A%22Copa%202026%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23060A12%22%2C%22theme_color%22%3A%22%23FFD700%22%7D">
 <meta name="theme-color" content="#FFD700">
@@ -390,8 +473,49 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Copa 2026">
 <script src="https://unpkg.com/tesseract.js@v4/dist/tesseract.min.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-logo">⚽</div>
+  <div class="auth-title">Copa 2026</div>
+  <div class="auth-sub">Entre para salvar sua coleção<br>e trocar figurinhas com amigos</div>
+  <div class="auth-card">
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="authTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="authTab('register')">Criar Conta</button>
+    </div>
+    <div id="auth-login-form">
+      <div class="auth-field">
+        <label>Usuário</label>
+        <input id="auth-username-login" type="text" placeholder="seu usuário" autocomplete="username" autocapitalize="none">
+      </div>
+      <div class="auth-field">
+        <label>Senha</label>
+        <input id="auth-password-login" type="password" placeholder="••••••" autocomplete="current-password">
+      </div>
+      <button class="auth-submit" onclick="doLogin()">Entrar →</button>
+    </div>
+    <div id="auth-register-form" style="display:none">
+      <div class="auth-field">
+        <label>Escolha um usuário</label>
+        <input id="auth-username-reg" type="text" placeholder="minimo 3 caracteres" autocapitalize="none" maxlength="20">
+      </div>
+      <div class="auth-field">
+        <label>Senha</label>
+        <input id="auth-password-reg" type="password" placeholder="mínimo 6 caracteres" autocomplete="new-password">
+      </div>
+      <button class="auth-submit" onclick="doRegister()">Criar Conta →</button>
+    </div>
+    <div class="auth-err" id="auth-err"></div>
+  </div>
+  <button class="auth-skip" onclick="skipAuth()">Usar sem conta (modo offline)</button>
+</div>
 
 <!-- ONBOARDING -->
 <div id="onboarding">
@@ -620,6 +744,9 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     </button>
     <button class="nav-btn" onclick="switchView('ai',this)">
       <div class="nav-icon">🤖</div><div class="nav-label">IA</div>
+    </button>
+    <button class="nav-btn" id="nav-trocas" onclick="switchView('trocas',this)">
+      <div class="nav-icon">👥</div><div class="nav-label">Trocas</div>
     </button>
   </nav>
 </div>
@@ -1248,7 +1375,36 @@ const KNOCKOUT_MATCHES = [
   {id:'FIN',phase:'final',label:'🏆 FINAL',date:'2026-07-19',time:'20:00',venue:'MetLife Stadium, Nova York',country:'🇺🇸',team1Name:'Vencedor SF1',team2Name:'Vencedor SF2',team1Flag:'🏆',team2Flag:'🏆'},
 ];
 
-const ALL_MATCHES = [...generateGroupMatches(), ...KNOCKOUT_MATCHES];
+const ALL_MATCHES = [...generateGroupMatches(), ...KNOCKOUT_MATCHES,
+
+  // ── Times complementares Copa 2026 (Grupos A-L) ──
+  {id:'ZAF',name:'África do Sul',group:'A',flag:'🇿🇦',ranking:68,titulos:0,info:'Anfitriã da Copa 2010. Retorna em 2026.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Ronwen Williams',pos:'GOL',icon:'🧤'},{num:3,name:'Sifiso Hlanti',pos:'ZAG',icon:'🛡️'},{num:4,name:'Njabulo Ngcobo',pos:'ZAG',icon:'🛡️'},{num:5,name:'Bongani Zungu',pos:'MEI',icon:'⚙️'},{num:6,name:'Themba Zwane',pos:'ATA',icon:'⚽'}]},
+  {id:'CZE',name:'Rep. Tcheca',group:'A',flag:'🇨🇿',ranking:33,titulos:0,info:'Antiga Tchecoslováquia, vice-campeã em 1934 e 1962.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Jindřich Staněk',pos:'GOL',icon:'🧤'},{num:3,name:'Tomáš Souček',pos:'MEI',icon:'⚙️',info:'Capitão, joga no West Ham'},{num:4,name:'Patrik Schick',pos:'ATA',icon:'⚽',info:'Artilheiro da Euro 2020'},{num:5,name:'Vladimír Coufal',pos:'LAT',icon:'🛡️'},{num:6,name:'Alex Král',pos:'MEI',icon:'⚙️'}]},
+  {id:'BIH',name:'Bósnia',group:'B',flag:'🇧🇦',ranking:60,titulos:0,info:'Primeira participação em 2014. Edin Džeko, lenda.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Kenan Pirić',pos:'GOL',icon:'🧤'},{num:3,name:'Ermedin Demirović',pos:'ATA',icon:'⚽'},{num:4,name:'Edin Džeko',pos:'ATA',icon:'⚽',info:'Lenda bósnia, ex-Roma e Man City'},{num:5,name:'Sead Kolašinac',pos:'LAT',icon:'🛡️'},{num:6,name:'Miralem Pjanić',pos:'MEI',icon:'⚙️'}]},
+  {id:'QAT',name:'Catar',group:'B',flag:'🇶🇦',ranking:58,titulos:0,info:'Anfitriã da Copa 2022. Campeã asiática.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Meshaal Barsham',pos:'GOL',icon:'🧤'},{num:3,name:'Almoez Ali',pos:'ATA',icon:'⚽',info:'Artilheiro da Copa Ásia 2019'},{num:4,name:'Hassan Al-Haydos',pos:'MEI',icon:'⚙️'},{num:5,name:'Assim Omer',pos:'ZAG',icon:'🛡️'},{num:6,name:'Akram Afif',pos:'ATA',icon:'⚽'}]},
+  {id:'SUI',name:'Suíça',group:'B',flag:'🇨🇭',ranking:19,titulos:0,info:'Suíça, presença constante. Quartas em 1934, 1938, 1954.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Yann Sommer',pos:'GOL',icon:'🧤',info:'Goleiro do Inter de Milão'},{num:3,name:'Granit Xhaka',pos:'MEI',icon:'⚙️',info:'Capitão, joga no Bayer Leverkusen'},{num:4,name:'Breel Embolo',pos:'ATA',icon:'⚽'},{num:5,name:'Manuel Akanji',pos:'ZAG',icon:'🛡️'},{num:6,name:'Xherdan Shaqiri',pos:'MEI',icon:'⚙️'}]},
+  {id:'HTI',name:'Haiti',group:'C',flag:'🇭🇹',ranking:83,titulos:0,info:'Haiti, surpresa caribenha na Copa 2026.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Josué Duverger',pos:'GOL',icon:'🧤'},{num:3,name:'Frantzdy Pierrot',pos:'ATA',icon:'⚽'},{num:4,name:'Wilde Donald Guerrier',pos:'MEI',icon:'⚙️'},{num:5,name:'Mechack Jérôme',pos:'ZAG',icon:'🛡️'},{num:6,name:'Duckens Nazon',pos:'ATA',icon:'⚽'}]},
+  {id:'SCO',name:'Escócia',group:'C',flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿',ranking:39,titulos:0,info:'Escócia retorna após longa ausência. Andrew Robertson no comando.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Angus Gunn',pos:'GOL',icon:'🧤'},{num:3,name:'Andrew Robertson',pos:'LAT',icon:'🛡️',info:'Capitão, lateral do Liverpool'},{num:4,name:'Scott McTominay',pos:'MEI',icon:'⚙️',info:'Joga na Napoli'},{num:5,name:'Kieran Tierney',pos:'LAT',icon:'🛡️'},{num:6,name:'John McGinn',pos:'MEI',icon:'⚙️'}]},
+  {id:'PRY',name:'Paraguai',group:'D',flag:'🇵🇾',ranking:55,titulos:0,info:'Paraguai, quartas de final em 2010.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Antony Silva',pos:'GOL',icon:'🧤'},{num:3,name:'Gustavo Gómez',pos:'ZAG',icon:'🛡️',info:'Capitão, joga no Palmeiras'},{num:4,name:'Miguel Almirón',pos:'MEI',icon:'⚙️',info:'Ex-Newcastle'},{num:5,name:'Alberto Espínola',pos:'ATA',icon:'⚽'},{num:6,name:'Óscar Romero',pos:'MEI',icon:'⚙️'}]},
+  {id:'TUR',name:'Turquia',group:'D',flag:'🇹🇷',ranking:28,titulos:0,info:'Turquia, 3º lugar na Copa 2002. Hakan Çalhanoğlu.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Mert Günok',pos:'GOL',icon:'🧤'},{num:3,name:'Hakan Çalhanoğlu',pos:'MEI',icon:'⚙️',info:'Capitão, Inter de Milão'},{num:4,name:'Kerem Aktürkoğlu',pos:'ATA',icon:'⚽'},{num:5,name:'Merih Demiral',pos:'ZAG',icon:'🛡️'},{num:6,name:'Arda Güler',pos:'MEI',icon:'⚙️',info:'Joven talento do Real Madrid'}]},
+  {id:'CUW',name:'Curaçao',group:'E',flag:'🇨🇼',ranking:88,titulos:0,info:'Curaçao, primeira Copa do Mundo em 2026.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Eloy Room',pos:'GOL',icon:'🧤'},{num:3,name:'Leandro Bacuna',pos:'MEI',icon:'⚙️'},{num:4,name:'Cuco Martina',pos:'LAT',icon:'🛡️'},{num:5,name:'Jarchinio Antonia',pos:'ATA',icon:'⚽'},{num:6,name:'Riechedly Bazoer',pos:'MEI',icon:'⚙️'}]},
+  {id:'CIV',name:'Costa do Marfim',group:'E',flag:'🇨🇮',ranking:48,titulos:0,info:'Costa do Marfim, terra de Drogba. Campeã africana.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Yahia Fofana',pos:'GOL',icon:'🧤'},{num:3,name:'Sébastien Haller',pos:'ATA',icon:'⚽',info:'Ex-Ajax, superou tumor cerebral'},{num:4,name:'Franck Kessié',pos:'MEI',icon:'⚙️'},{num:5,name:'Max-Alain Gradel',pos:'ATA',icon:'⚽'},{num:6,name:'Wilfried Zaha',pos:'ATA',icon:'⚽'}]},
+  {id:'SWE',name:'Suécia',group:'F',flag:'🇸🇪',ranking:24,titulos:0,info:'Suécia, 3º lugar em 1994. Zlatan encerrou a era.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Robin Olsen',pos:'GOL',icon:'🧤'},{num:3,name:'Alexander Isak',pos:'ATA',icon:'⚽',info:'Artilheiro do Newcastle'},{num:4,name:'Victor Lindelöf',pos:'ZAG',icon:'🛡️'},{num:5,name:'Dejan Kulusevski',pos:'MEI',icon:'⚙️'},{num:6,name:'Mattias Svanberg',pos:'MEI',icon:'⚙️'}]},
+  {id:'TUN',name:'Tunísia',group:'F',flag:'🇹🇳',ranking:31,titulos:0,info:'Tunísia, campeã africana. Presença frequente nas Copas.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Aymen Dahmen',pos:'GOL',icon:'🧤'},{num:3,name:'Youssef Msakni',pos:'ATA',icon:'⚽'},{num:4,name:'Wahbi Khazri',pos:'MEI',icon:'⚙️'},{num:5,name:'Dylan Bronn',pos:'ZAG',icon:'🛡️'},{num:6,name:'Hannibal Mejbri',pos:'MEI',icon:'⚙️',info:'Joga no Manchester United'}]},
+  {id:'EGY',name:'Egito',group:'G',flag:'🇪🇬',ranking:36,titulos:0,info:'Egito, terra de Mohamed Salah. 3x campeão africano.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Mohamed El-Shenawy',pos:'GOL',icon:'🧤'},{num:3,name:'Mohamed Salah',pos:'ATA',icon:'⚽',info:'Capitão, lenda do Liverpool'},{num:4,name:'Trezeguet',pos:'ATA',icon:'⚽'},{num:5,name:'Ahmed Hegazi',pos:'ZAG',icon:'🛡️'},{num:6,name:'Omar Marmoush',pos:'ATA',icon:'⚽',info:'Atacante do Manchester City'}]},
+  {id:'IRN',name:'Irã',group:'G',flag:'🇮🇷',ranking:22,titulos:0,info:'Irã, Team Melli. 3 Copas consecutivas desde 2014.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Alireza Beiranvand',pos:'GOL',icon:'🧤'},{num:3,name:'Sardar Azmoun',pos:'ATA',icon:'⚽',info:'Artilheiro histórico do Irã'},{num:4,name:'Mehdi Taremi',pos:'ATA',icon:'⚽',info:'Atacante do Inter de Milão'},{num:5,name:'Saman Ghoddos',pos:'MEI',icon:'⚙️'},{num:6,name:'Ali Gholizadeh',pos:'ATA',icon:'⚽'}]},
+  {id:'NZL',name:'Nova Zelândia',group:'G',flag:'🇳🇿',ranking:102,titulos:0,info:'Nova Zelândia, All Whites. Única Copa foi 2010.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Michael Woud',pos:'GOL',icon:'🧤'},{num:3,name:'Chris Wood',pos:'ATA',icon:'⚽',info:'Artilheiro histórico da NZ'},{num:4,name:'Winston Reid',pos:'ZAG',icon:'🛡️'},{num:5,name:'Liberato Cacace',pos:'LAT',icon:'🛡️'},{num:6,name:'Elijah Just',pos:'MEI',icon:'⚙️'}]},
+  {id:'CPV',name:'Cabo Verde',group:'H',flag:'🇨🇻',ranking:72,titulos:0,info:'Cabo Verde, primeira Copa do Mundo em 2026.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Vozinha',pos:'GOL',icon:'🧤'},{num:3,name:'Garry Rodrigues',pos:'ATA',icon:'⚽'},{num:4,name:'Ryan Mendes',pos:'ATA',icon:'⚽'},{num:5,name:'Kenny Rocha Santos',pos:'MEI',icon:'⚙️'},{num:6,name:'Steven Fortes',pos:'ZAG',icon:'🛡️'}]},
+  {id:'KSA',name:'Arábia Saudita',group:'H',flag:'🇸🇦',ranking:56,titulos:0,info:'Arábia Saudita, venceu a Argentina 2-1 em 2022.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Mohammed Al-Owais',pos:'GOL',icon:'🧤'},{num:3,name:'Salem Al-Dawsari',pos:'ATA',icon:'⚽',info:'Herói contra a Argentina em 2022'},{num:4,name:'Yasser Al-Shahrani',pos:'LAT',icon:'🛡️'},{num:5,name:'Ali Al-Bulayhi',pos:'LAT',icon:'🛡️'},{num:6,name:'Firas Al-Buraikan',pos:'ATA',icon:'⚽'}]},
+  {id:'NOR',name:'Noruega',group:'I',flag:'🇳🇴',ranking:14,titulos:0,info:'Noruega, terra de Erling Haaland. Retorna após longa ausência.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Ørjan Nyland',pos:'GOL',icon:'🧤'},{num:3,name:'Erling Haaland',pos:'ATA',icon:'⚽',info:'Capitão, maior artilheiro do Manchester City'},{num:4,name:'Martin Ødegaard',pos:'MEI',icon:'⚙️',info:'Capitão do Arsenal'},{num:5,name:'Sander Berge',pos:'MEI',icon:'⚙️'},{num:6,name:'Alexander Sørloth',pos:'ATA',icon:'⚽'}]},
+  {id:'REP',name:'Repescagem',group:'I',flag:'🌍',ranking:999,titulos:0,info:'Vaga conquistada via repescagem intercontinental.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'}]},
+  {id:'ALG',name:'Argélia',group:'J',flag:'🇩🇿',ranking:44,titulos:0,info:'Argélia, campeã africana 2019. Islam Slimani, lenda.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Rais MBolhi',pos:'GOL',icon:'🧤'},{num:3,name:'Riyad Mahrez',pos:'ATA',icon:'⚽',info:'Ex-Manchester City, lenda argelina'},{num:4,name:'Islam Slimani',pos:'ATA',icon:'⚽'},{num:5,name:'Ismaël Bennacer',pos:'MEI',icon:'⚙️',info:'Joga no AC Milan'},{num:6,name:'Azzedine Ounahi',pos:'MEI',icon:'⚙️'}]},
+  {id:'AUT',name:'Áustria',group:'J',flag:'🇦🇹',ranking:25,titulos:0,info:'Áustria, 3º lugar na Copa 1954. David Alaba, lenda.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Patrick Pentz',pos:'GOL',icon:'🧤'},{num:3,name:'David Alaba',pos:'ZAG',icon:'🛡️',info:'Capitão, Real Madrid'},{num:4,name:'Marcel Sabitzer',pos:'MEI',icon:'⚙️',info:'Joga no Borussia Dortmund'},{num:5,name:'Marko Arnautovic',pos:'ATA',icon:'⚽'},{num:6,name:'Christoph Baumgartner',pos:'MEI',icon:'⚙️'}]},
+  {id:'JOR',name:'Jordânia',group:'J',flag:'🇯🇴',ranking:66,titulos:0,info:'Jordânia, vice-campeã asiática 2023. Primeira Copa.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Yazeed Abulaila',pos:'GOL',icon:'🧤'},{num:3,name:'Mousa Al-Tamari',pos:'ATA',icon:'⚽'},{num:4,name:'Baha Abdel-Rahman',pos:'ZAG',icon:'🛡️'},{num:5,name:'Yazan Al-Naimat',pos:'MEI',icon:'⚙️'},{num:6,name:'Ahmad Dibo',pos:'ATA',icon:'⚽'}]},
+  {id:'COD',name:'RD Congo',group:'K',flag:'🇨🇩',ranking:51,titulos:0,info:'República Democrática do Congo, ex-Zaire. 2x campeã africana.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Joël Kiassumbua',pos:'GOL',icon:'🧤'},{num:3,name:'Théo Bongonda',pos:'ATA',icon:'⚽'},{num:4,name:'Chancel Mbemba',pos:'ZAG',icon:'🛡️'},{num:5,name:'Arthur Masuaku',pos:'LAT',icon:'🛡️'},{num:6,name:'Cédric Bakambu',pos:'ATA',icon:'⚽'}]},
+  {id:'UZB',name:'Uzbequistão',group:'K',flag:'🇺🇿',ranking:70,titulos:0,info:'Uzbequistão, estreante na Copa 2026. Futebol crescente na Ásia Central.',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Otabek Shukurov',pos:'GOL',icon:'🧤'},{num:3,name:'Eldor Shomurodov',pos:'ATA',icon:'⚽',info:'Joga na Roma'},{num:4,name:'Jasur Yakhshiboyev',pos:'MEI',icon:'⚙️'},{num:5,name:'Sarvarbek Komilov',pos:'ZAG',icon:'🛡️'},{num:6,name:'Mirzohid Halikov',pos:'ATA',icon:'⚽'}]},
+  {id:'GHA',name:'Gana',group:'L',flag:'🇬🇭',ranking:62,titulos:0,info:'Gana, Black Stars. Quase semifinalista em 2010 (pênalti de Suárez).',players:[{num:1,name:'Distintivo',type:'badge',icon:'🛡️',pos:'ESCUDO'},{num:2,name:'Lawrence Ati-Zigi',pos:'GOL',icon:'🧤'},{num:3,name:'Thomas Partey',pos:'MEI',icon:'⚙️',info:'Capitão, joga no Arsenal'},{num:4,name:'Mohammed Kudus',pos:'ATA',icon:'⚽',info:'Joga no West Ham'},{num:5,name:'Jordan Ayew',pos:'ATA',icon:'⚽'},{num:6,name:'Daniel-Kofi Kyereh',pos:'MEI',icon:'⚙️'}]},
+];
 
 // Build flat sticker list
 const ALL_STICKERS = [...SPECIAL];
@@ -2116,9 +2272,22 @@ Responda em português brasileiro, de forma animada e entusiasmada sobre futebol
 Use emojis com moderação. Seja conciso (máximo 3 parágrafos). 
 Se perguntarem sobre a coleção do usuário, use os dados fornecidos acima.`;
 
+    const aiApiKey = localStorage.getItem('copa2026_gemini_key');
+    if(!aiApiKey){
+      removeAITyping();
+      addAIBotMessage('⚙️ Configure sua chave da API Claude nas configurações (⚙️) para usar o Copa Bot.');
+      aiIsTyping=false;
+      document.getElementById('ai-send-btn').disabled=false;
+      return;
+    }
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key': aiApiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
         max_tokens:1000,
@@ -2171,8 +2340,472 @@ window.addEventListener('beforeinstallprompt',e=>{
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
-window.addEventListener('load', checkOnboarding);
+window.addEventListener('load', ()=>{
+  if(FIREBASE_READY){
+    // Firebase will call onLoginSuccess() or leave user at auth screen
+    // Show auth screen if user not logged in after 1.5s
+    setTimeout(()=>{ 
+      if(!currentUser) showAuthScreen(); 
+    }, 1500);
+  } else {
+    checkOnboarding();
+  }
+});
 window.addEventListener('beforeunload', stopCamera);
+
+
+// =======================================================
+// FIREBASE CONFIG — Substitua com suas credenciais
+// Guia: https://console.firebase.google.com
+// =======================================================
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAA9ZTcDyOklU2TbLp2E1p20sUxyUIB0mA",
+  authDomain: "copa2026-album.firebaseapp.com",
+  databaseURL: "https://copa2026-album-default-rtdb.firebaseio.com",
+  projectId: "copa2026-album",
+  storageBucket: "copa2026-album.firebasestorage.app",
+  messagingSenderId: "987866453659",
+  appId: "1:987866453659:web:a17e45c535cacf62ec183e",
+  measurementId: "G-F6J312SG0N"
+};
+
+const FIREBASE_READY = FIREBASE_CONFIG.apiKey !== "COLOQUE-SUA-API-KEY-AQUI";
+let fbApp, fbAuth, fbDb;
+let currentUser = null;
+let currentGroupId = null;
+let chatListener = null;
+let groupsListener = null;
+
+if(FIREBASE_READY){
+  try{
+    fbApp  = firebase.initializeApp(FIREBASE_CONFIG);
+    fbAuth = firebase.auth();
+    fbDb   = firebase.database();
+    fbAuth.onAuthStateChanged(user => {
+      if(user){
+        fbDb.ref('users/'+user.uid).once('value').then(snap=>{
+          const data = snap.val();
+          if(data){ currentUser = {uid: user.uid, username: data.username}; onLoginSuccess(); }
+          else fbAuth.signOut();
+        });
+      } else { currentUser = null; }
+    });
+  } catch(e){ console.error('Firebase init error:',e); }
+}
+
+// --- AUTH UI ---
+function showAuthScreen(){
+  document.getElementById('auth-screen').style.display='flex';
+}
+function hideAuthScreen(){
+  document.getElementById('auth-screen').style.display='none';
+}
+function authTab(tab){
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('auth-login-form').style.display   = tab==='login'?'block':'none';
+  document.getElementById('auth-register-form').style.display = tab==='register'?'block':'none';
+  document.getElementById('auth-err').textContent='';
+}
+function setAuthErr(msg){ document.getElementById('auth-err').textContent=msg; }
+
+async function doRegister(){
+  if(!FIREBASE_READY){ setAuthErr('Firebase nao configurado. Veja o guia.'); return; }
+  const username = document.getElementById('auth-username-reg').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'');
+  const password = document.getElementById('auth-password-reg').value;
+  if(username.length < 3){ setAuthErr('Usuario deve ter pelo menos 3 caracteres.'); return; }
+  if(password.length < 6){ setAuthErr('Senha deve ter pelo menos 6 caracteres.'); return; }
+  setAuthErr('Criando conta...');
+  try{
+    const existing = await fbDb.ref('usernames/'+username).once('value');
+    if(existing.exists()){ setAuthErr('Usuario ja existe. Tente outro.'); return; }
+    const cred = await fbAuth.createUserWithEmailAndPassword(username+'@copa2026.app', password);
+    const uid = cred.user.uid;
+    await fbDb.ref('users/'+uid).set({username, createdAt: Date.now()});
+    await fbDb.ref('usernames/'+username).set(uid);
+  } catch(e){ setAuthErr('Erro: ' + (e.message||e)); }
+}
+
+async function doLogin(){
+  if(!FIREBASE_READY){ setAuthErr('Firebase nao configurado.'); return; }
+  const username = document.getElementById('auth-username-login').value.trim().toLowerCase();
+  const password = document.getElementById('auth-password-login').value;
+  if(!username||!password){ setAuthErr('Preencha usuario e senha.'); return; }
+  setAuthErr('Entrando...');
+  try{
+    await fbAuth.signInWithEmailAndPassword(username+'@copa2026.app', password);
+  } catch(e){ setAuthErr('Usuario ou senha incorretos.'); }
+}
+
+async function doLogout(){
+  if(chatListener){ chatListener(); chatListener=null; }
+  if(groupsListener){ groupsListener(); groupsListener=null; }
+  currentUser=null; currentGroupId=null;
+  if(FIREBASE_READY && fbAuth) await fbAuth.signOut();
+  document.getElementById('trocas-main').style.display='none';
+  document.getElementById('trocas-nologin').style.display='block';
+  document.getElementById('trocas-group-detail').style.display='none';
+}
+
+function skipAuth(){
+  hideAuthScreen();
+  checkOnboarding();
+}
+
+function onLoginSuccess(){
+  hideAuthScreen();
+  if(!localStorage.getItem('copa2026_started')) checkOnboarding();
+  if(currentView==='trocas') renderTrocasView();
+  syncAlbumToFirebase();
+}
+
+// --- patch switchView for trocas tab ---
+const _origSwitchView = switchView;
+function switchView(view, btn){
+  if(view==='trocas'){
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const vEl = document.getElementById('view-trocas');
+    if(vEl) vEl.classList.add('active');
+    currentView='trocas';
+    renderTrocasView();
+    return;
+  }
+  _origSwitchView(view, btn);
+}
+
+// --- TROCAS VIEW ---
+function renderTrocasView(){
+  if(!currentUser){
+    document.getElementById('trocas-nologin').style.display='block';
+    document.getElementById('trocas-main').style.display='none';
+    document.getElementById('trocas-group-detail').style.display='none';
+    return;
+  }
+  document.getElementById('trocas-nologin').style.display='none';
+  document.getElementById('trocas-main').style.display='block';
+  document.getElementById('trocas-group-detail').style.display='none';
+  document.getElementById('trocas-username-display').textContent = currentUser.username;
+  document.getElementById('trocas-avatar-letter').textContent = currentUser.username[0].toUpperCase();
+  loadMyGroups();
+}
+
+// --- GROUPS ---
+function loadMyGroups(){
+  if(!currentUser||!FIREBASE_READY) return;
+  const listEl = document.getElementById('my-groups-list');
+  listEl.innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:8px">Carregando...</div>';
+  if(groupsListener){ groupsListener(); groupsListener=null; }
+  const ref = fbDb.ref('userGroups/'+currentUser.uid);
+  groupsListener = ref.on('value', snap => {
+    const data = snap.val() || {};
+    const groupIds = Object.keys(data);
+    if(!groupIds.length){
+      listEl.innerHTML='<div class="empty-groups"><div class="empty-groups-icon">&#128101;</div><div>Voce ainda nao tem grupos.</div><div style="font-size:11px;margin-top:4px">Crie ou entre em um grupo para trocar figurinhas!</div></div>';
+      return;
+    }
+    Promise.all(groupIds.map(gid => fbDb.ref('groups/'+gid+'/meta').once('value'))).then(snaps => {
+      listEl.innerHTML='';
+      snaps.forEach((s, i) => {
+        const meta = s.val();
+        if(!meta) return;
+        const memberCount = meta.memberCount||1;
+        const el = document.createElement('div');
+        el.className='group-item';
+        el.innerHTML='<div class="group-item-icon">&#128101;</div><div class="group-item-info"><div class="group-item-name">'+meta.name+'</div><div class="group-item-meta">'+memberCount+' membro'+(memberCount>1?'s':'')+' &middot; '+meta.code+'</div></div><div class="group-item-arrow">&#8250;</div>';
+        el.onclick=()=>openGroup(groupIds[i], meta);
+        listEl.appendChild(el);
+      });
+    });
+  });
+}
+
+async function showCreateGroup(){
+  const name = prompt('Nome do grupo (ex: Turma da Copa):');
+  if(!name||!name.trim()) return;
+  const code = Math.random().toString(36).substr(2,6).toUpperCase();
+  const gid = fbDb.ref('groups').push().key;
+  const updates = {};
+  updates['groups/'+gid+'/meta'] = {name:name.trim(),code,creatorId:currentUser.uid,createdAt:Date.now(),memberCount:1};
+  updates['groups/'+gid+'/members/'+currentUser.uid] = {username:currentUser.username,joinedAt:Date.now()};
+  updates['userGroups/'+currentUser.uid+'/'+gid] = true;
+  await fbDb.ref().update(updates);
+  showToast('Grupo criado! Codigo: '+code,'success');
+  syncAlbumToFirebase(gid);
+}
+
+async function showJoinGroup(){
+  const code = prompt('Digite o codigo do grupo (6 caracteres):');
+  if(!code) return;
+  const upperCode = code.trim().toUpperCase();
+  const snap = await fbDb.ref('groups').orderByChild('meta/code').equalTo(upperCode).once('value');
+  const data = snap.val();
+  if(!data){ showToast('Codigo invalido','error'); return; }
+  const gid = Object.keys(data)[0];
+  const meta = data[gid].meta;
+  const memberSnap = await fbDb.ref('groups/'+gid+'/members/'+currentUser.uid).once('value');
+  if(memberSnap.exists()){ showToast('Voce ja esta neste grupo','info'); openGroup(gid, meta); return; }
+  const updates = {};
+  updates['groups/'+gid+'/members/'+currentUser.uid] = {username:currentUser.username,joinedAt:Date.now()};
+  updates['groups/'+gid+'/meta/memberCount'] = (meta.memberCount||1)+1;
+  updates['userGroups/'+currentUser.uid+'/'+gid] = true;
+  await fbDb.ref().update(updates);
+  await fbDb.ref('groups/'+gid+'/messages').push({uid:'system',username:'Sistema',text:currentUser.username+' entrou no grupo! &#127881;',timestamp:Date.now(),type:'system'});
+  showToast('Entrou em "'+meta.name+'"!','success');
+  syncAlbumToFirebase(gid);
+  openGroup(gid, meta);
+}
+
+function openGroup(gid, meta){
+  currentGroupId = gid;
+  document.getElementById('trocas-main').style.display='none';
+  document.getElementById('trocas-group-detail').style.display='block';
+  document.getElementById('gd-name').textContent = meta.name;
+  document.getElementById('gd-code').textContent = 'Cod: '+meta.code;
+  document.querySelectorAll('.group-tab').forEach((b,i)=>{b.classList.toggle('active',i===0);});
+  groupTab('membros');
+  loadGroupMembers(gid);
+}
+
+function backToGroups(){
+  if(chatListener){ chatListener(); chatListener=null; }
+  currentGroupId=null;
+  document.getElementById('trocas-group-detail').style.display='none';
+  document.getElementById('trocas-main').style.display='block';
+}
+
+function copyGroupCode(){
+  const raw = document.getElementById('gd-code').textContent;
+  const code = raw.replace('Cod: ','');
+  if(navigator.clipboard) navigator.clipboard.writeText(code).then(()=>showToast('Codigo copiado: '+code,'info'));
+}
+
+function groupTab(tab){
+  document.querySelectorAll('.group-tab').forEach(b=>b.classList.remove('active'));
+  if(event && event.target) event.target.classList.add('active');
+  ['membros','chat','trocas'].forEach(t=>{
+    const el=document.getElementById('gt-'+t);
+    if(el) el.style.display = t===tab?'block':'none';
+  });
+  if(tab==='chat') loadGroupChat(currentGroupId);
+  if(tab==='trocas') loadComparisonTab(currentGroupId);
+}
+
+// --- MEMBERS ---
+async function loadGroupMembers(gid){
+  const snap = await fbDb.ref('groups/'+gid+'/members').once('value');
+  const members = snap.val()||{};
+  const el = document.getElementById('members-list');
+  el.innerHTML='';
+  for(const [uid, mdata] of Object.entries(members)){
+    const albumSnap = await fbDb.ref('groups/'+gid+'/albums/'+uid).once('value');
+    const albumData = albumSnap.val();
+    const col = albumData ? albumData.collection : {};
+    const unique = Object.keys(col).filter(k=>col[k]>0).length;
+    const dups = Object.keys(col).filter(k=>col[k]>1).length;
+    const isMe = uid===currentUser.uid;
+    const card = document.createElement('div');
+    card.className='member-card';
+    card.innerHTML='<div class="member-card-top">'
+      +'<div class="member-avatar">'+mdata.username[0].toUpperCase()+'</div>'
+      +'<div class="member-name">'+mdata.username+'</div>'
+      +(isMe?'<span class="member-badge">Voce</span>':'')
+      +'</div>'
+      +'<div class="member-stats">'
+      +'<div class="member-stat"><div class="member-stat-val">'+unique+'</div><div class="member-stat-lbl">Tenho</div></div>'
+      +'<div class="member-stat"><div class="member-stat-val">'+(ALL_STICKERS.length-unique)+'</div><div class="member-stat-lbl">Faltam</div></div>'
+      +'<div class="member-stat"><div class="member-stat-val">'+dups+'</div><div class="member-stat-lbl">Repetidas</div></div>'
+      +'</div>'
+      +(isMe?'<div class="share-bar"><button class="share-btn '+(albumData?'active':'')+'" onclick="syncAlbumToFirebase(\''+gid+'\',true)">'+(albumData?'&#10003; Album compartilhado':'&#128228; Compartilhar Album')+'</button></div>':'');
+    el.appendChild(card);
+  }
+}
+
+// --- CHAT ---
+function loadGroupChat(gid){
+  if(!gid) return;
+  const messagesEl = document.getElementById('chat-messages');
+  messagesEl.innerHTML='';
+  if(chatListener){ chatListener(); chatListener=null; }
+  const ref = fbDb.ref('groups/'+gid+'/messages').limitToLast(60);
+  chatListener = ref.on('value', snap => {
+    messagesEl.innerHTML='';
+    const msgs = snap.val()||{};
+    Object.values(msgs).sort((a,b)=>a.timestamp-b.timestamp).forEach(msg => {
+      if(msg.type==='system'){
+        const div=document.createElement('div'); div.className='chat-system'; div.textContent=msg.text;
+        messagesEl.appendChild(div);
+      } else {
+        const isMine = msg.uid===currentUser.uid;
+        const div=document.createElement('div');
+        div.className='chat-bubble '+(isMine?'mine':'other');
+        if(!isMine){ const nm=document.createElement('div'); nm.className='chat-bubble-name'; nm.textContent=msg.username; div.appendChild(nm); }
+        div.appendChild(document.createTextNode(msg.text));
+        messagesEl.appendChild(div);
+      }
+    });
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  });
+}
+
+async function sendChatMessage(){
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if(!text||!currentGroupId) return;
+  input.value='';
+  await fbDb.ref('groups/'+currentGroupId+'/messages').push({
+    uid:currentUser.uid, username:currentUser.username,
+    text, timestamp:Date.now(), type:'text'
+  });
+}
+
+// --- ALBUM SYNC ---
+async function syncAlbumToFirebase(gid, showFeedback=false){
+  if(!currentUser||!FIREBASE_READY) return;
+  const groupsSnap = await fbDb.ref('userGroups/'+currentUser.uid).once('value');
+  const groupIds = gid ? [gid] : Object.keys(groupsSnap.val()||{});
+  const albumData = {collection:collection, updatedAt:Date.now()};
+  const updates = {};
+  groupIds.forEach(g => { updates['groups/'+g+'/albums/'+currentUser.uid] = albumData; });
+  if(Object.keys(updates).length) await fbDb.ref().update(updates);
+  if(showFeedback) showToast('Album sincronizado!','success');
+}
+
+// --- COMPARISON ---
+async function loadComparisonTab(gid){
+  const snap = await fbDb.ref('groups/'+gid+'/members').once('value');
+  const members = snap.val()||{};
+  const btnEl = document.getElementById('comparison-member-btns');
+  btnEl.innerHTML='';
+  for(const [uid, mdata] of Object.entries(members)){
+    if(uid===currentUser.uid) continue;
+    const btn = document.createElement('button');
+    btn.style.cssText='padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:var(--card);color:var(--text1);font-size:12px;font-weight:700;cursor:pointer;margin:2px';
+    btn.textContent = mdata.username;
+    btn.onclick = ()=>compareWithMember(gid, uid, mdata.username);
+    btnEl.appendChild(btn);
+  }
+  if(!btnEl.children.length) btnEl.innerHTML='<div class="comparison-empty">Nenhum outro membro no grupo ainda.</div>';
+  document.getElementById('comparison-result').innerHTML='<div class="comparison-empty">Selecione um membro para ver as trocas possiveis.</div>';
+}
+
+async function compareWithMember(gid, otherUid, otherName){
+  const resultEl = document.getElementById('comparison-result');
+  resultEl.innerHTML='<div style="text-align:center;padding:16px;color:var(--text3)">Calculando...</div>';
+  const [mySnap, theirSnap] = await Promise.all([
+    fbDb.ref('groups/'+gid+'/albums/'+currentUser.uid).once('value'),
+    fbDb.ref('groups/'+gid+'/albums/'+otherUid).once('value')
+  ]);
+  const myCol   = (mySnap.val()||{}).collection   || {};
+  const theirCol = (theirSnap.val()||{}).collection || {};
+  const canGive    = ALL_STICKERS.filter(s => (myCol[s.id]||0)>1 && !(theirCol[s.id]>0));
+  const canReceive = ALL_STICKERS.filter(s => (theirCol[s.id]||0)>1 && !(myCol[s.id]>0));
+
+  resultEl.innerHTML='<div style="font-size:13px;font-weight:700;margin-bottom:12px">Trocas com '+otherName+'</div>';
+
+  const makeSection = (title, cls, items, emptyMsg) => {
+    const sec = document.createElement('div');
+    sec.className='comparison-section';
+    const titleDiv = document.createElement('div');
+    titleDiv.className='comparison-section-title';
+    titleDiv.textContent = title+' ('+items.length+')';
+    sec.appendChild(titleDiv);
+    if(!items.length){
+      const em=document.createElement('div'); em.className='comparison-empty'; em.textContent=emptyMsg; sec.appendChild(em);
+    } else {
+      const pills=document.createElement('div');
+      items.slice(0,40).forEach(s=>{
+        const p=document.createElement('span');
+        p.className='comparison-pill '+cls;
+        p.textContent=s.flag+' '+s.num;
+        p.title=s.name;
+        p.onclick=()=>showToast(s.flag+' '+s.name,'info');
+        pills.appendChild(p);
+      });
+      if(items.length>40){const more=document.createElement('span');more.className='comparison-pill';more.style.color='var(--text3)';more.textContent='+mais '+(items.length-40);pills.appendChild(more);}
+      sec.appendChild(pills);
+    }
+    return sec;
+  };
+
+  resultEl.appendChild(makeSection('Posso DAR para '+otherName,'can-give',canGive,'Voce nao tem repetidas que '+otherName+' precisa.'));
+  resultEl.appendChild(makeSection('Posso RECEBER de '+otherName,'can-receive',canReceive,otherName+' nao tem repetidas que voce precisa.'));
+}
+
+// --- Hook addSticker to auto-sync ---
+const _origAddStickerFB = addSticker;
+function addSticker(id, silent=false){
+  _origAddStickerFB(id, silent);
+  if(currentUser) setTimeout(()=>syncAlbumToFirebase(),2500);
+}
+
 </script>
+
+  <!-- TROCAS / GRUPOS -->
+  <div class="view" id="view-trocas" style="padding-bottom:16px">
+    <!-- Not logged in state -->
+    <div id="trocas-nologin" style="display:none;text-align:center;padding:40px 16px">
+      <div style="font-size:48px;margin-bottom:12px">👥</div>
+      <div style="font-size:18px;font-weight:900;margin-bottom:8px">Trocas de Figurinhas</div>
+      <div style="font-size:13px;color:var(--text2);margin-bottom:24px">Faça login para criar grupos e trocar figurinhas com seus amigos em tempo real.</div>
+      <button class="add-btn" onclick="showAuthScreen()" style="max-width:240px;margin:0 auto">Fazer Login / Criar Conta</button>
+    </div>
+    <!-- Logged in: groups list -->
+    <div id="trocas-main" style="display:none">
+      <div class="troca-header">
+        <div class="troca-user">
+          <div class="troca-avatar" id="trocas-avatar-letter">?</div>
+          <div>
+            <div class="troca-username" id="trocas-username-display">–</div>
+            <div style="font-size:10px;color:var(--text3)">Álbum sincronizado</div>
+          </div>
+        </div>
+        <button class="troca-logout" onclick="doLogout()">Sair</button>
+      </div>
+      <div class="group-actions">
+        <button class="group-btn primary" onclick="showCreateGroup()">+ Criar Grupo</button>
+        <button class="group-btn secondary" onclick="showJoinGroup()">🔗 Entrar por Código</button>
+      </div>
+      <div id="my-groups-list" class="group-list">
+        <div style="text-align:center;color:var(--text3);font-size:12px;padding:8px">Carregando grupos...</div>
+      </div>
+    </div>
+    <!-- Group detail -->
+    <div id="trocas-group-detail" style="display:none">
+      <div class="group-detail-header">
+        <button class="group-back" onclick="backToGroups()">←</button>
+        <div class="group-detail-name" id="gd-name">–</div>
+        <span class="group-code-badge" id="gd-code" onclick="copyGroupCode()" title="Toque para copiar">código</span>
+      </div>
+      <div class="group-tabs">
+        <button class="group-tab active" onclick="groupTab('membros')">👥 Membros</button>
+        <button class="group-tab" onclick="groupTab('chat')">💬 Chat</button>
+        <button class="group-tab" onclick="groupTab('trocas')">🔄 Trocas</button>
+      </div>
+      <!-- Membros tab -->
+      <div id="gt-membros">
+        <div id="members-list"></div>
+      </div>
+      <!-- Chat tab -->
+      <div id="gt-chat" style="display:none">
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-row">
+          <input class="chat-input" id="chat-input" placeholder="Digite uma mensagem..." 
+            onkeydown="if(event.key==='Enter')sendChatMessage()">
+          <button class="chat-send" onclick="sendChatMessage()">➤</button>
+        </div>
+      </div>
+      <!-- Trocas comparison tab -->
+      <div id="gt-trocas" style="display:none">
+        <div id="comparison-select" style="margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px">Comparar com:</div>
+          <div id="comparison-member-btns" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+        </div>
+        <div id="comparison-result"></div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
