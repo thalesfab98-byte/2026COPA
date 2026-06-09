@@ -389,6 +389,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Copa 2026">
+<script src="https://unpkg.com/tesseract.js@v4/dist/tesseract.min.js"></script>
 </head>
 <body>
 
@@ -647,19 +648,32 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);fon
     <div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.18);border-radius:12px;padding:14px;margin-bottom:14px">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <span style="font-size:18px">🤖</span>
-        <span style="font-size:13px;font-weight:700;color:var(--gold)">Google Gemini Vision</span>
+        <span style="font-size:13px;font-weight:700;color:var(--gold)"><div style="background:rgba(0,230,118,.06);border:1px solid rgba(0,230,118,.2);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:18px">📷</span>
+        <span style="font-size:13px;font-weight:700;color:var(--green)">Reconhecimento de Figurinha</span>
+        <span style="background:var(--green);color:#000;font-size:9px;font-weight:800;padding:2px 7px;border-radius:99px;margin-left:auto">SEM CHAVE</span>
+      </div>
+      <div style="font-size:11px;color:var(--text2);line-height:1.5">
+        Leitura de texto local (OCR) — funciona sem internet, sem conta, sem chave de API.<br>
+        Tire a foto da figurinha e o app lê o nome/número automaticamente.
+      </div>
+    </div>
+    <div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.18);border-radius:12px;padding:14px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">🤖</span>
+        <span style="font-size:13px;font-weight:700;color:var(--gold)">Copa Bot (Chat IA)</span>
         <span id="ai-status-dot" style="width:7px;height:7px;border-radius:50%;background:var(--text2);margin-left:auto"></span>
       </div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:10px;line-height:1.5">
-        Use a API gratuita do Google para identificar jogadores automaticamente pela foto.<br><br>
-        ✅ <strong style="color:var(--text)">Grátis:</strong> 1.500 fotos/dia · Sem cartão de crédito
+        Para usar o assistente de perguntas sobre a Copa 2026, cole sua chave Claude (Anthropic).<br>
+        <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--gold)">Criar chave gratuita →</a>
       </div>
-      <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:5px;font-weight:600">CHAVE DE API (GEMINI)</label>
-      <input id="gemini-key-input" type="password" placeholder="Cole sua chave Gemini aqui..."
-        style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-size:12px;outline:none;font-family:monospace;margin-bottom:7px"
+      <label style="font-size:11px;color:var(--text2);display:block;margin-bottom:5px;font-weight:600">CHAVE CLAUDE (sk-ant-...)</label>
+      <input id="gemini-key-input" type="password" placeholder="sk-ant-..."
+        style="width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-size:12px;font-family:monospace;outline:none"
         oninput="checkApiKeyFormat(this.value)">
       <div id="api-key-hint" style="font-size:10px;color:var(--text2);margin-bottom:9px"></div>
-      <a href="https://aistudio.google.com/app/apikey" target="_blank" style="display:block;text-align:center;font-size:11px;color:var(--blue);margin-bottom:10px;text-decoration:none">🔗 Obter chave gratuita → aistudio.google.com</a>
       <button onclick="saveApiKey()" class="add-btn" style="font-size:13px;padding:11px">Salvar Chave</button>
     </div>
     <button class="modal-btn secondary" onclick="closeSettings()">Fechar</button>
@@ -1754,62 +1768,113 @@ function confirmAdd(){
 // ═══════════════════════════════════════════════════
 async function processPhotoWithAI(dataUrl){
   document.getElementById('photo-thumb').src=dataUrl;
-  document.getElementById('sticker-search').value='';
-  document.getElementById('search-results').innerHTML='';
-  document.getElementById('confirm-add-btn').disabled=true;
-  selectedSticker=null;
-  const panel=document.getElementById('ai-result-panel');
-  panel.style.display='block';
-  document.getElementById('ai-loading').style.display='flex';
-  document.getElementById('ai-match-result').style.display='none';
-  document.getElementById('ai-no-key').style.display='none';
-  const apiKey=localStorage.getItem('copa2026_gemini_key');
-  if(!apiKey){ document.getElementById('ai-loading').style.display='none'; document.getElementById('ai-no-key').style.display='block'; return; }
+  const statusEl=document.getElementById('ai-status-text');
+  const loadEl=document.getElementById('ai-loading-state');
+  const resultEl=document.getElementById('ai-match-result');
+  if(loadEl){loadEl.style.display='block';}
+  if(resultEl){resultEl.style.display='none';}
+  if(statusEl){statusEl.textContent='Lendo texto da figurinha...';}
   try{
-    setAILoadingMsg('Enviando para o Gemini...');
-    const base64=dataUrl.split(',')[1];
-    const aiResult=await callGeminiVision(base64);
-    setAILoadingMsg('Buscando na base de dados...');
-    const matches=findStickerMatch(aiResult);
-    showAIMatchResult(aiResult,matches);
-  } catch(e){
-    document.getElementById('ai-loading').style.display='none';
-    document.getElementById('ai-no-key').style.display='block';
-    document.getElementById('ai-no-key').innerHTML=`
-      <div style="font-size:28px;margin-bottom:8px">⚠️</div>
-      <div style="font-size:13px;font-weight:700;color:var(--red);margin-bottom:4px">Erro no reconhecimento</div>
-      <div style="font-size:11px;color:var(--text2);margin-bottom:12px">${e.message||'Verifique sua chave de API'}</div>
-      <div style="display:flex;gap:8px">
-        <button onclick="showManualSearchFromAI()" class="add-btn" style="flex:1;font-size:13px">🔍 Busca manual</button>
-        <button onclick="retakePhoto()" style="flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:12px;padding:13px;color:var(--text2);font-weight:700;font-size:13px;cursor:pointer">📷 Nova foto</button>
-      </div>`;
-    console.error('AI error:',e);
+    const result=await Tesseract.recognize(dataUrl,'por+eng',{
+      logger:m=>{
+        if(m.status==='recognizing text'&&statusEl){
+          statusEl.textContent='Analisando... '+Math.round(m.progress*100)+'%';
+        }
+      }
+    });
+    const rawText=result.data.text||'';
+    console.log('OCR texto bruto:',rawText);
+    const matches=findStickerMatchByText(rawText);
+    showOCRResult(rawText,matches);
+  }catch(e){
+    console.error('OCR erro:',e);
+    if(loadEl){loadEl.style.display='none';}
+    showToast('Erro OCR: '+e.message,'error');
   }
 }
-function setAILoadingMsg(msg){ document.getElementById('ai-loading-msg').textContent=msg; }
-async function callGeminiVision(base64img){
-  const apiKey=localStorage.getItem('copa2026_gemini_key');
-  const teamList=TEAMS.map(t=>`${t.name}(${t.id})`).join(',');
-  const playerList=ALL_STICKERS.filter(s=>s.type!=='badge'&&s.teamId!=='SPECIAL').map(s=>`${s.name}-${s.team}[${s.id}]`).join('\n');
-  const prompt=`Você é um especialista em figurinhas da Copa 2026 (Panini). Analise esta imagem de figurinha e identifique:
-Times disponíveis: ${teamList}
-Jogadores no álbum: ${playerList}
-Retorne APENAS JSON válido (sem texto extra):
-{"player":"Nome Completo","team":"Nome do Time","sticker_id":"XXX-00","confidence":0.0}
-Se for escudo/distintivo: {"player":"Distintivo","team":"Nome do Time","sticker_id":"XXX-01","confidence":0.0}
-Se não identificar: {"player":null,"team":null,"sticker_id":null,"confidence":0}`;
-  const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${apiKey}`,{
-    method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt},{inline_data:{mime_type:'image/jpeg',data:base64img}}]}],generationConfig:{temperature:0.1,maxOutputTokens:200}})
+
+function norm(s){return(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();}
+
+function findStickerMatchByText(rawText){
+  const txt=norm(rawText);
+  const words=txt.split(' ').filter(w=>w.length>2);
+  const results=[];
+  ALL_STICKERS.forEach(s=>{
+    const sname=norm(s.name);
+    const steam=norm(s.team);
+    const sid=norm(s.id);
+    let score=0;
+    // Full name match
+    if(txt.includes(sname))score+=10;
+    // Word-by-word match
+    sname.split(' ').filter(w=>w.length>2).forEach(w=>{if(txt.includes(w))score+=3;});
+    // Team name
+    steam.split(' ').filter(w=>w.length>3).forEach(w=>{if(txt.includes(w))score+=1;});
+    // Sticker ID/number
+    if(txt.includes(sid)||txt.includes(s.num.toLowerCase()))score+=5;
+    // Individual word match from OCR
+    words.forEach(w=>{
+      if(w.length>3&&sname.includes(w))score+=2;
+    });
+    if(score>3)results.push({...s,score});
   });
-  if(!res.ok){ const err=await res.json(); throw new Error(err.error?.message||`HTTP ${res.status}`); }
-  const data=await res.json();
-  const text=data.candidates?.[0]?.content?.parts?.[0]?.text||'';
-  const jsonMatch=text.match(/\{[\s\S]*?\}/);
-  if(!jsonMatch) throw new Error('Resposta inválida da IA');
-  return JSON.parse(jsonMatch[0]);
+  return results.sort((a,b)=>b.score-a.score).slice(0,5);
 }
-function normalize(s){ return(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').trim(); }
+
+function showOCRResult(rawText,matches){
+  const loadEl=document.getElementById('ai-loading-state');
+  const resultEl=document.getElementById('ai-match-result');
+  if(loadEl){loadEl.style.display='none';}
+  if(resultEl){resultEl.style.display='block';}
+  const top=matches[0];
+  const ocrPreview=rawText.replace(/
+/g,' ').substring(0,60).trim();
+  if(top){
+    currentAIMatch=top.id;
+    const cnt=getCount(top.id);
+    document.getElementById('ai-match-flag').textContent=top.flag||top.icon||'⚽';
+    document.getElementById('ai-match-name').textContent=top.name;
+    document.getElementById('ai-match-detail').textContent=top.num+' · '+top.team+' · '+top.pos+(cnt>0?' · JÁ COLETADA':'');
+    document.getElementById('ai-conf').textContent='OCR';
+    const cb=document.getElementById('ai-confirm-btn');
+    if(cb){
+      if(cnt>0){cb.textContent='Adicionar como Repetida';cb.style.background='linear-gradient(135deg,#FFA500,#FF6B00)';}
+      else{cb.textContent='✅ Confirmar e Adicionar';cb.style.background='';}
+      cb.disabled=false;
+    }
+    // Show other candidates
+    const others=matches.slice(1,4);
+    const othersEl=document.getElementById('ai-other-candidates');
+    const listEl=document.getElementById('ai-candidates-list');
+    if(othersEl&&listEl&&others.length){
+      othersEl.style.display='block';listEl.innerHTML='';
+      others.forEach(s=>{
+        const el=document.createElement('div');
+        el.style.cssText='display:flex;align-items:center;gap:8px;padding:8px;background:var(--card);border-radius:8px;cursor:pointer;margin-bottom:4px;border:1px solid var(--border2)';
+        el.innerHTML='<span style="font-size:18px">'+s.flag+'</span><div style="flex:1"><div style="font-size:12px;font-weight:700">'+s.name+'</div><div style="font-size:10px;color:var(--text2)">'+s.num+' · '+s.team+'</div></div>';
+        el.onclick=()=>{
+          currentAIMatch=s.id;
+          document.getElementById('ai-match-flag').textContent=s.flag||s.icon;
+          document.getElementById('ai-match-name').textContent=s.name;
+          document.getElementById('ai-match-detail').textContent=s.num+' · '+s.team;
+          othersEl.style.display='none';
+          if(document.getElementById('ai-confirm-btn'))document.getElementById('ai-confirm-btn').disabled=false;
+          showToast('Selecionado: '+s.name,'info');
+        };
+        listEl.appendChild(el);
+      });
+    }
+  }else{
+    currentAIMatch=null;
+    document.getElementById('ai-match-flag').textContent='❓';
+    document.getElementById('ai-match-name').textContent='Não identificado';
+    document.getElementById('ai-match-detail').textContent=ocrPreview?'Texto lido: "'+ocrPreview+'"':'Nenhum texto encontrado na foto';
+    const cb=document.getElementById('ai-confirm-btn');
+    if(cb)cb.disabled=true;
+  }
+}
+
+
 function findStickerMatch(aiResult){
   if(!aiResult) return [];
   const results=[];
@@ -1937,14 +2002,14 @@ function closeSettings(e){ if(e&&e.target!==document.getElementById('settings-mo
 function saveApiKey(){
   const key=document.getElementById('gemini-key-input').value.trim();
   if(!key){ showToast('Digite a chave de API','error'); return; }
-  if(key.length < 20){ showToast('Chave muito curta — cole a chave completa','error'); return; }
+  if(key.length < 20){ showToast('Chave muito curta','error'); return; }
   localStorage.setItem('copa2026_gemini_key',key);
   updateAIStatusDot(); closeSettings(); showToast('✅ Chave salva! IA ativada.','success');
 }
 function checkApiKeyFormat(val){
   const hint=document.getElementById('api-key-hint');
   if(!val){hint.textContent='';return;}
-  if(val.length>=20){hint.textContent='✅ Formato válido';hint.style.color='var(--green)';}
+  if(val.startsWith('sk-ant')){hint.textContent='✅ Chave Claude válida';hint.style.color='var(--green)';}else if(val.length>=20){hint.textContent='✅ Formato aceito';hint.style.color='var(--green)';}
   else{hint.textContent='⚠️ Cole a chave completa (mínimo 20 caracteres)';hint.style.color='var(--gold)';}
 }
 function updateAIStatusDot(){
