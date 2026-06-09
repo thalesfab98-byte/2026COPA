@@ -1767,18 +1767,23 @@ function confirmAdd(){
 // AI RECOGNITION (Gemini Vision)
 // ═══════════════════════════════════════════════════
 async function processPhotoWithAI(dataUrl){
+  // Mostrar preview e painel de resultado
   document.getElementById('photo-thumb').src=dataUrl;
-  const statusEl=document.getElementById('ai-status-text');
-  const loadEl=document.getElementById('ai-loading-state');
+  const rev=document.getElementById('photo-review');
+  if(rev) rev.classList.add('show');
+  document.getElementById('ai-result-panel').style.display='block';
+  // IDs corretos conforme HTML: ai-loading e ai-loading-msg
+  const loadEl=document.getElementById('ai-loading');
   const resultEl=document.getElementById('ai-match-result');
-  if(loadEl){loadEl.style.display='block';}
+  const msgEl=document.getElementById('ai-loading-msg');
+  if(loadEl){loadEl.style.display='flex';}
   if(resultEl){resultEl.style.display='none';}
-  if(statusEl){statusEl.textContent='Lendo texto da figurinha...';}
+  if(msgEl){msgEl.textContent='Lendo texto da figurinha...';}
   try{
     const result=await Tesseract.recognize(dataUrl,'por+eng',{
       logger:m=>{
-        if(m.status==='recognizing text'&&statusEl){
-          statusEl.textContent='Analisando... '+Math.round(m.progress*100)+'%';
+        if(m.status==='recognizing text'&&msgEl){
+          msgEl.textContent='Analisando... '+Math.round(m.progress*100)+'%';
         }
       }
     });
@@ -1822,7 +1827,7 @@ function findStickerMatchByText(rawText){
 }
 
 function showOCRResult(rawText,matches){
-  const loadEl=document.getElementById('ai-loading-state');
+  const loadEl=document.getElementById('ai-loading');
   const resultEl=document.getElementById('ai-match-result');
   if(loadEl){loadEl.style.display='none';}
   if(resultEl){resultEl.style.display='block';}
