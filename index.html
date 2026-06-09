@@ -1827,8 +1827,7 @@ function showOCRResult(rawText,matches){
   if(loadEl){loadEl.style.display='none';}
   if(resultEl){resultEl.style.display='block';}
   const top=matches[0];
-  const ocrPreview=rawText.replace(/
-/g,' ').substring(0,60).trim();
+  const ocrPreview=rawText.replace(/\n/g,' ').substring(0,60).trim();
   if(top){
     currentAIMatch=top.id;
     const cnt=getCount(top.id);
